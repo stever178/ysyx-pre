@@ -1,3 +1,7 @@
+9月 04 23:30:32 lsj-VirtualBox systemd[1179]: Startup finished in 302ms.
+9月 04 23:30:35 lsj-VirtualBox systemd[1]: Startup finished in 3.592s (kernel) + 8.322s (userspace) = 11.915s.
+9月 04 23:31:31 lsj-VirtualBox systemd[1724]: Startup finished in 267ms.
+
 9月 04 01:23:00 lsj-VirtualBox systemd[2152]: Startup finished in 283ms.
 9月 04 01:23:04 lsj-VirtualBox systemd[1]: Startup finished in 3.952s (kernel) + 5min 5.952s (userspace) = 5min 9.905s.
 9月 04 01:23:17 lsj-VirtualBox systemd[2664]: Startup finished in 284ms.
@@ -24,7 +28,6 @@
 8月 31 02:18:54 lsj-VirtualBox systemd[1421]: Startup finished in 297ms.
 8月 31 02:20:21 lsj-VirtualBox systemd[2015]: Startup finished in 410ms.
 8月 31 02:20:22 lsj-VirtualBox systemd[1]: Startup finished in 2.729s (kernel) + 32.611s (userspace) = 35.340s.
-
 
 
 
