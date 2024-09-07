@@ -12,4 +12,4 @@ all: ${OUT}
 
 clean:
 	@rm -f ex1
-	find . -type f -executable -delete
+	@find . -type f -executable -delete

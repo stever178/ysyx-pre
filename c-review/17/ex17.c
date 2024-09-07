@@ -40,6 +40,10 @@ void Database_close(struct Connection *conn)
         if(conn->file) fclose(conn->file);
         if(conn->db) {
 			if (conn->db->rows) {
+				for (int i = 0; i < conn->db->max_rows; i ++) {
+					free(conn->db->rows[i].name);
+					free(conn->db->rows[i].email);
+				}
 				free(conn->db->rows);
 				conn->db->rows = NULL;
 			}
@@ -176,7 +180,6 @@ void Database_create(struct Connection *conn)
         struct Address addr = {.id = i, .set = 0, .name=NULL, .email=NULL};
         // then just assign it
         conn->db->rows[i] = addr;
-		conn->db->rows[i].id = i;
     }
 }
 
