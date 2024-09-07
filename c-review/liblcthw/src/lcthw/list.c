@@ -3,6 +3,7 @@
 
 List *List_create()
 {
+	// using calloc, memory is set to zero
     return calloc(1, sizeof(List));
 }
 
@@ -121,4 +122,23 @@ void *List_remove(List *list, ListNode *node)
 
 error:
     return result;
+}
+
+void *ListCopy(List *list, int start, int end) {
+    void *result = NULL;
+	check(start >= 0, "start id is too small, should >= 0 \n");
+	check(end < list->count, "end id is too large, should < %d \n", list->count);
+	
+	result = List_create();
+	int id = 0;
+    LIST_FOREACH(list, first, next, cur) {
+        if(id >= start) {
+			List_push(result, cur->value);
+        }
+		id ++;
+		if (id == list->count) return result;
+    }
+
+error:
+	return result;
 }

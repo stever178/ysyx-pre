@@ -39,7 +39,8 @@ tests: CFLAGS += -fPIC
 tests: $(TESTS) $(SO_TARGET)
 
 # 构建测试程序
-$(TESTS): $(TEST_SRC) $(SO_TARGET)
+#$(TESTS): $(TEST_SRC) $(SO_TARGET)
+$(TESTS): % : %.c $(SO_TARGET)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 # 运行测试脚本
