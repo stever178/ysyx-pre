@@ -1,5 +1,8 @@
 CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
 LIBS=-Lbuild -llcthw $(OPTLIBS)
+# Makefile 所在的目录
+LDFLAGS=-Wl,-rpath,$(CURDIR)/build
+
 PREFIX?=/usr/local
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
@@ -37,7 +40,7 @@ tests: $(TESTS) $(SO_TARGET)
 
 # 构建测试程序
 $(TESTS): $(TEST_SRC) $(SO_TARGET)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
 
 # 运行测试脚本
 tests: $(TESTS)
