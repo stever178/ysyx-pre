@@ -125,8 +125,9 @@ char *all_tests() {
     mu_run_test(test_shift);
     mu_run_test(test_copy);
 	// more tests to be added ...
-
     mu_run_test(test_destroy);
+
+	debug("\n[END of test]\n");
     return NULL;
 }
 

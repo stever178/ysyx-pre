@@ -54,6 +54,7 @@ char *all_tests() {
     mu_run_test(test_send_recv);
     mu_run_test(test_destroy);
 
+	debug("\n[END of test]\n");
     return NULL;
 }
 

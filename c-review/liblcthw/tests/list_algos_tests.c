@@ -117,7 +117,7 @@ char *test_time_compare()
     	List_destroy(words);
 	}
 
-	debug(" After %3d times sorting, 'bubble' used %.3f seconds, 'merge' used %.3f seconds \n", epochs, time_bubble, time_merge); 
+	debug(" After %3d times sorting, 'bubble' used %.3f seconds, 'merge' used %.3f seconds", epochs, time_bubble, time_merge); 
 
 	return NULL;
 }
@@ -131,6 +131,7 @@ char *all_tests()
     mu_run_test(test_merge_sort);
 	mu_run_test(test_time_compare);
 
+	debug("\n[END of test]\n");
     return NULL;
 }
 

@@ -1,6 +1,7 @@
 #include "minunit.h"
-#include <lcthw/stack.h>
 #include <assert.h>
+#include <lcthw/stack.h>
+//#include <lcthw/stack_darray.h>
 
 static Stack *stack = NULL;
 char *tests[] = {"test1 data", "test2 data", "test3 data"};
@@ -54,6 +55,7 @@ char *all_tests() {
     mu_run_test(test_push_pop);
     mu_run_test(test_destroy);
 
+	debug("\n[END of test]\n");
     return NULL;
 }
 
