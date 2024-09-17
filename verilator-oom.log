@@ -1,0 +1,200 @@
+9月 09 00:50:00 lsj-VirtualBox systemd[1]: sysstat-collect.service: Deactivated successfully.
+9月 09 00:50:00 lsj-VirtualBox systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+9月 09 00:55:01 lsj-VirtualBox CRON[55569]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 00:55:01 lsj-VirtualBox CRON[55570]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+9月 09 00:55:01 lsj-VirtualBox CRON[55569]: pam_unix(cron:session): session closed for user root
+9月 09 01:00:00 lsj-VirtualBox systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+9月 09 01:00:00 lsj-VirtualBox systemd[1]: sysstat-collect.service: Deactivated successfully.
+9月 09 01:00:00 lsj-VirtualBox systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+9月 09 01:01:32 lsj-VirtualBox rtkit-daemon[1219]: The canary thread is apparently starving. Taking action.
+9月 09 01:01:32 lsj-VirtualBox rtkit-daemon[1219]: Demoting known real-time threads.
+9月 09 01:01:32 lsj-VirtualBox rtkit-daemon[1219]: Demoted 0 threads.
+9月 09 01:05:01 lsj-VirtualBox CRON[55577]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 01:05:01 lsj-VirtualBox CRON[55578]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+9月 09 01:05:01 lsj-VirtualBox CRON[55577]: pam_unix(cron:session): session closed for user root
+9月 09 01:07:28 lsj-VirtualBox systemd[1]: Starting fwupd-refresh.service - Refresh fwupd metadata and update motd...
+9月 09 01:07:28 lsj-VirtualBox systemd[1]: fwupd-refresh.service: Deactivated successfully.
+9月 09 01:07:28 lsj-VirtualBox systemd[1]: Finished fwupd-refresh.service - Refresh fwupd metadata and update motd.
+9月 09 01:10:00 lsj-VirtualBox systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+9月 09 01:10:00 lsj-VirtualBox systemd[1]: sysstat-collect.service: Deactivated successfully.
+9月 09 01:10:00 lsj-VirtualBox systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+9月 09 01:11:10 lsj-VirtualBox tracker-miner-fs-3[55626]: (tracker-extract-3:55626): GLib-GIO-WARNING **: 01:11:10.107: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:15:01 lsj-VirtualBox CRON[55638]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 01:15:01 lsj-VirtualBox CRON[55639]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+9月 09 01:15:01 lsj-VirtualBox CRON[55638]: pam_unix(cron:session): session closed for user root
+9月 09 01:15:05 lsj-VirtualBox kernel: 16:15:21.903519 SHCLX11   Shared Clipboard: Converting VBox formats 'UNICODETEXT, HTML' to 'UTF8_STRING' for X11 (idxFmtX11=1, 
+9月 09 01:15:05 lsj-VirtualBox kernel: 17:15:05.897045 SHCLX11   Requesting data in format 0x1 from host failed with VERR_NO_DATA
+9月 09 01:15:05 lsj-VirtualBox gnome-shell[1955]: Failed to store clipboard: Format UTF8_STRING not supported
+9月 09 01:16:29 lsj-VirtualBox sudo[55645]:      lsj : TTY=pts/2 ; PWD=/home/lsj/projects ; USER=root ; COMMAND=/usr/bin/apt-get install git help2man perl python3 make autoconf g++ flex bison ccache
+9月 09 01:16:29 lsj-VirtualBox sudo[55645]: pam_unix(sudo:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:16:38 lsj-VirtualBox dbus-daemon[555]: [system] Activating via systemd: service name='org.freedesktop.PackageKit' unit='packagekit.service' requested by ':1.408' (uid=0 pid=55903 comm="/usr/bin/gdbus call --system --dest org.freedeskto" label="unconfined")
+9月 09 01:16:38 lsj-VirtualBox systemd[1]: Starting packagekit.service - PackageKit Daemon...
+9月 09 01:16:38 lsj-VirtualBox PackageKit[55907]: daemon start
+9月 09 01:16:38 lsj-VirtualBox dbus-daemon[555]: [system] Successfully activated service 'org.freedesktop.PackageKit'
+9月 09 01:16:38 lsj-VirtualBox systemd[1]: Started packagekit.service - PackageKit Daemon.
+9月 09 01:16:40 lsj-VirtualBox sudo[55645]: pam_unix(sudo:session): session closed for user root
+9月 09 01:16:49 lsj-VirtualBox sudo[55943]:      lsj : TTY=pts/2 ; PWD=/home/lsj/projects ; USER=root ; COMMAND=/usr/bin/apt-get install libgoogle-perftools-dev numactl perl-doc
+9月 09 01:16:49 lsj-VirtualBox sudo[55943]: pam_unix(sudo:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:16:59 lsj-VirtualBox sudo[55943]: pam_unix(sudo:session): session closed for user root
+9月 09 01:17:01 lsj-VirtualBox CRON[56108]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 01:17:01 lsj-VirtualBox CRON[56109]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)
+9月 09 01:17:01 lsj-VirtualBox CRON[56108]: pam_unix(cron:session): session closed for user root
+9月 09 01:17:10 lsj-VirtualBox sudo[56114]:      lsj : TTY=pts/2 ; PWD=/home/lsj/projects ; USER=root ; COMMAND=/usr/bin/apt-get install libfl2
+9月 09 01:17:10 lsj-VirtualBox sudo[56114]: pam_unix(sudo:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:17:11 lsj-VirtualBox sudo[56114]: pam_unix(sudo:session): session closed for user root
+9月 09 01:17:16 lsj-VirtualBox pkexec[56128]: pam_unix(polkit-1:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:17:16 lsj-VirtualBox pkexec[56128]: lsj: Executing command [USER=root] [TTY=unknown] [CWD=/home/lsj] [COMMAND=/usr/lib/update-notifier/package-system-locked]
+9月 09 01:17:16 lsj-VirtualBox update-notifier.desktop[56137]: [90B blob data]
+9月 09 01:17:17 lsj-VirtualBox update-notifier.desktop[56137]: [163B blob data]
+9月 09 01:17:17 lsj-VirtualBox update-notifier.desktop[56137]: [101B blob data]
+9月 09 01:17:18 lsj-VirtualBox sudo[56141]:      lsj : TTY=pts/2 ; PWD=/home/lsj/projects ; USER=root ; COMMAND=/usr/bin/apt-get install libfl-dev
+9月 09 01:17:18 lsj-VirtualBox sudo[56141]: pam_unix(sudo:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:17:19 lsj-VirtualBox sudo[56141]: pam_unix(sudo:session): session closed for user root
+9月 09 01:17:19 lsj-VirtualBox update-notifier.desktop[56147]: WARNING:root:can not import unity GI Namespace Dbusmenu not available
+9月 09 01:17:29 lsj-VirtualBox sudo[56240]:      lsj : TTY=pts/2 ; PWD=/home/lsj/projects ; USER=root ; COMMAND=/usr/bin/apt-get install zlibc zlib1g zlib1g-dev
+9月 09 01:17:29 lsj-VirtualBox sudo[56240]: pam_unix(sudo:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:17:29 lsj-VirtualBox sudo[56240]: pam_unix(sudo:session): session closed for user root
+9月 09 01:20:00 lsj-VirtualBox systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+9月 09 01:20:00 lsj-VirtualBox systemd[1]: sysstat-collect.service: Deactivated successfully.
+9月 09 01:20:00 lsj-VirtualBox systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+9月 09 01:21:33 lsj-VirtualBox systemd[1724]: Started app-gnome-org.gnome.Settings-56287.scope - Application launched by gnome-shell.
+9月 09 01:21:34 lsj-VirtualBox org.gnome.Settings.desktop[56287]: MESA: error: ZINK: failed to choose pdev
+9月 09 01:21:34 lsj-VirtualBox org.gnome.Settings.desktop[56287]: libEGL warning: egl: failed to create dri2 screen
+9月 09 01:21:34 lsj-VirtualBox gnome-shell[1955]: meta_window_set_stack_position_no_sync: assertion 'window->stack_position >= 0' failed
+9月 09 01:21:41 lsj-VirtualBox systemd[1724]: app-gnome-org.gnome.Settings-56287.scope: Consumed 1.623s CPU time.
+9月 09 01:21:43 lsj-VirtualBox rtkit-daemon[1219]: Successfully made thread 56340 of process 56338 owned by '1000' RT at priority 20.
+9月 09 01:21:43 lsj-VirtualBox rtkit-daemon[1219]: Supervising 1 threads of 1 processes of 1 users.
+9月 09 01:22:03 lsj-VirtualBox PackageKit[55907]: daemon quit
+9月 09 01:22:03 lsj-VirtualBox systemd[1]: packagekit.service: Deactivated successfully.
+9月 09 01:22:17 lsj-VirtualBox tracker-miner-fs-3[56371]: (tracker-extract-3:56371): GLib-GIO-WARNING **: 01:22:17.945: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:22:33 lsj-VirtualBox tracker-miner-fs-3[56410]: (tracker-extract-3:56410): GLib-GIO-WARNING **: 01:22:33.422: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:23:31 lsj-VirtualBox tracker-miner-fs-3[56454]: (tracker-extract-3:56454): GLib-GIO-WARNING **: 01:23:31.937: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:25:01 lsj-VirtualBox CRON[56556]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 01:25:01 lsj-VirtualBox CRON[56557]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+9月 09 01:25:01 lsj-VirtualBox CRON[56556]: pam_unix(cron:session): session closed for user root
+9月 09 01:25:27 lsj-VirtualBox tracker-miner-fs-3[56580]: (tracker-extract-3:56580): GLib-GIO-WARNING **: 01:25:27.990: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:28:45 lsj-VirtualBox tracker-miner-fs-3[56628]: (tracker-extract-3:56628): GLib-GIO-WARNING **: 01:28:45.453: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:30:00 lsj-VirtualBox systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+9月 09 01:30:00 lsj-VirtualBox systemd[1]: sysstat-collect.service: Deactivated successfully.
+9月 09 01:30:00 lsj-VirtualBox systemd[1]: Finished sysstat-collect.service - system activity accounting tool.
+9月 09 01:30:43 lsj-VirtualBox tracker-miner-fs-3[56785]: (tracker-extract-3:56785): GLib-GIO-WARNING **: 01:30:43.891: Error creating IO channel for /proc/self/mountinfo: Invalid argument (g-io-error-quark, 13)
+9月 09 01:32:16 lsj-VirtualBox pkexec[56857]: pam_unix(polkit-1:session): session opened for user root(uid=0) by lsj(uid=1000)
+9月 09 01:32:16 lsj-VirtualBox pkexec[56857]: lsj: Executing command [USER=root] [TTY=unknown] [CWD=/home/lsj] [COMMAND=/usr/lib/update-notifier/package-system-locked]
+9月 09 01:34:57 lsj-VirtualBox gnome-shell[1955]: libinput error: event6  - VirtualBox mouse integration: client bug: event processing lagging behind by 64ms, your system is too slow
+9月 09 01:35:02 lsj-VirtualBox CRON[58588]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+9月 09 01:35:02 lsj-VirtualBox CRON[58589]: (root) CMD (command -v debian-sa1 > /dev/null && debian-sa1 1 1)
+9月 09 01:35:02 lsj-VirtualBox CRON[58588]: pam_unix(cron:session): session closed for user root
+9月 09 01:35:21 lsj-VirtualBox gnome-shell[1955]: libinput error: event6  - VirtualBox mouse integration: client bug: event processing lagging behind by 54ms, your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: client bug: timer event4 wheel scroll: scheduled expiry is in the past (-1288ms), your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: client bug: timer event4 wheel scroll: scheduled expiry is in the past (-1279ms), your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: client bug: timer event4 wheel scroll: scheduled expiry is in the past (-1247ms), your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: client bug: timer event4 wheel scroll: scheduled expiry is in the past (-1207ms), your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: client bug: timer event4 wheel scroll: scheduled expiry is in the past (-1088ms), your system is too slow
+9月 09 01:35:36 lsj-VirtualBox gnome-shell[1955]: libinput error: WARNING: log rate limit exceeded (5 msgs per 3600000ms). Discarding future messages.
+9月 09 01:40:40 lsj-VirtualBox systemd[1]: Starting sysstat-collect.service - system activity accounting tool...
+9月 09 01:40:48 lsj-VirtualBox kernel: 17:15:05.897676 SHCLX11   Shared Clipboard: Converting VBox formats 'UNICODETEXT' to 'UTF8_STRING' for X11 (idxFmtX11=1, fmtX11
+9月 09 01:40:49 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:40:52 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:40:55 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:40:58 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:02 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:05 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:10 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:15 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:20 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:24 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:28 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:32 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:36 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:39 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:42 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:46 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:50 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:53 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:59 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:04 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:09 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:15 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:19 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:25 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:30 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:41:58 lsj-VirtualBox systemd-resolved[456]: Under memory pressure, flushing caches.
+9月 09 01:42:42 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:47 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:52 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:42:59 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:04 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:09 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:15 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:21 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:26 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:32 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:39 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:45 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:49 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:55 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:43:59 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:05 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:09 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:12 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:17 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:23 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:29 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:36 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:42 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:47 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:51 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:44:56 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:45:02 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:45:11 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:45:19 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:45:33 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:45:57 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:46:12 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:46:32 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:46:48 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:47:12 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:47:37 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:47:59 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:48:16 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:48:43 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:49:05 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:49:29 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:49:44 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:50:04 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:50:19 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:50:40 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:50:53 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:51:15 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:51:39 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:52:03 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 01:52:26 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:50:32 lsj-VirtualBox kernel: usb 1-1: USB disconnect, device number 8
+9月 09 09:50:53 lsj-VirtualBox kernel: usb 1-1: new full-speed USB device number 9 using ohci-pci
+9月 09 09:51:36 lsj-VirtualBox kernel: usb 1-1: New USB device found, idVendor=80ee, idProduct=0021, bcdDevice= 1.00
+9月 09 09:52:12 lsj-VirtualBox kernel: usb 1-1: New USB device strings: Mfr=1, Product=3, SerialNumber=0
+9月 09 09:53:04 lsj-VirtualBox kernel: usb 1-1: Product: USB Tablet
+9月 09 09:53:38 lsj-VirtualBox kernel: usb 1-1: Manufacturer: VirtualBox
+9月 09 09:54:29 lsj-VirtualBox kernel: input: VirtualBox USB Tablet as /devices/pci0000:00/0000:00:06.0/usb1/1-1/1-1:1.0/0003:80EE:0021.0008/input/input14
+9月 09 09:54:42 lsj-VirtualBox kernel: hid-generic 0003:80EE:0021.0008: input,hidraw0: USB HID v1.10 Mouse [VirtualBox USB Tablet] on usb-0000:00:06.0-1/input0
+9月 09 09:55:28 lsj-VirtualBox kernel: 17:52:27.855541 control  Session 0 is about to close ...
+9月 09 09:55:41 lsj-VirtualBox kernel: e1000: enp0s3 NIC Link is Down
+9月 09 09:56:00 lsj-VirtualBox kernel: 17:52:28.723158 control  Stopping all guest processes ...
+9月 09 09:56:13 lsj-VirtualBox kernel: 17:52:29.435503 control  Closing all guest files ...
+9月 09 09:56:26 lsj-VirtualBox kernel: 17:52:30.189167 control  vbglR3GuestCtrlDetectPeekGetCancelSupport: Supported (#1)
+9月 09 09:56:47 lsj-VirtualBox kernel: e1000: enp0s3 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+9月 09 09:57:04 lsj-VirtualBox kernel: 01:50:13.516213 timesync vgsvcTimeSyncWorker: Radical host time change: 28 675 789 000 000ns (HostNow=1 725 846 612 150 000 000
+9月 09 09:57:11 lsj-VirtualBox kernel: 01:50:25.727431 timesync vgsvcTimeSyncWorker: Radical guest time change: 28 670 649 586 000ns (GuestNow=1 725 846 624 106 311 0
+9月 09 09:57:15 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:57:29 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:57:36 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:57:45 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:57:53 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:57:59 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:03 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:07 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:12 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:17 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:21 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:26 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
+9月 09 09:58:30 lsj-VirtualBox systemd-journald[256]: Under memory pressure, flushing caches.
