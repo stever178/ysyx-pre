@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt update
+
 # verilator prerequisites
 sudo apt-get install -y git help2man perl python3 make autoconf g++ flex bison ccache
 sudo apt-get install -y libgoogle-perftools-dev numactl perl-doc
@@ -9,5 +11,31 @@ sudo apt-get install -y zlibc zlib1g zlib1g-dev  # Ubuntu only (ignore if gives 
 
 unset VERILATOR_ROOT  # For bash
 
-#
 sudo apt-get install -y gtkwave
+
+# JDK
+# Ensure the necessary packages are present:
+sudo apt install -y wget gpg apt-transport-https
+# Download the Eclipse Adoptium GPG key:
+wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/adoptium.gpg > /dev/null
+# Configure the Eclipse Adoptium apt repository
+echo "deb https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print$2}' /etc/os-release) main" | sudo tee /etc/apt/sources.list.d/adoptium.list
+# Install
+sudo apt install temurin-17-jdk
+
+# Install Scala with cs setup (recommended)
+# on the x86_64
+curl -fL https://github.com/coursier/coursier/releases/latest/download/cs-x86_64-pc-linux.gz | gzip -d > cs && chmod +x cs && ./cs setup
+
+# install Scala cli
+#curl -sS "https://virtuslab.github.io/scala-cli-packages/KEY.gpg" | sudo gpg --dearmor  -o /etc/apt/trusted.gpg.d/scala-cli.gpg 2>/dev/null
+#sudo curl -s --compressed -o /etc/apt/sources.list.d/scala_cli_packages.list "https://virtuslab.github.io/scala-cli-packages/debian/scala_cli_packages.list"
+
+sudo apt install scala-cli
+scala-cli install completions
+
+
+# We recommend Chisel users use Mill.
+curl -L https://raw.githubusercontent.com/lefou/millw/0.4.11/millw > mill && chmod +x mill
+sudo mv mill /usr/local/bin/
+

@@ -1,9 +1,14 @@
 
+**/target
+
 **/*.o
-**/*.out
 **/*.out*
+**/out
 
 **/*.a
 **/*.so
 
 **/obj*
+
+**/.bsp
+**/.scala-build
