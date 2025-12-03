@@ -1,12 +1,30 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <readline/readline.h>
+// #include <readline/history.h>
 
 int main() {
+	static char *line_read = NULL;
+
 	int sum = 0;
 	for (int t = 1; t <= 100; t ++) {
 		sum += t;
 	}
-	printf("Hello World, %5d\n", sum);
+	printf("Hello World, %5lu\n", strtoul("0x8000'0000", NULL, 0));
 
+	line_read = readline("(test) ");
+	printf("read result: %s\n", line_read);
+	printf("length of line_read : %5zd[end]\n", strlen(line_read));
+
+	char *cmd = strtok(line_read, " ");
+	printf("line_read after strtok: %s[end]\n", line_read);
+
+	char *args = cmd + strlen(cmd) + 1;
+	printf("cmd is %s\nargs is %s[end]\n", cmd, args);
+	printf("length of cmd, args: %3zd, %3zd[end]\n", strlen(cmd), strlen(args));
+	printf("*args == 0 is %1d\n", (*args == 0));
+	
 	return 0;
 }
 

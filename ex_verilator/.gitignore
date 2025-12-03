@@ -1,5 +1,3 @@
-*.*
-*
 !*/
 !Makefile
 !*.mk
@@ -9,5 +7,9 @@
 !*.cpp
 !.gitignore
 !README.md
-!log_pre
-build/
+!log
+
+**/.cache
+**/.vscode
+**/build
+**/compile_commands.json

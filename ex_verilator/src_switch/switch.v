@@ -1,4 +1,3 @@
-
 module switch(
 	input a,
 	input b,
