@@ -1,9 +1,9 @@
 TOPNAME = switch
-NXDC_FILES = switch.nxdc
+NXDC_FILES = constr/top.nxdc
 INC_PATH ?=
 
 VERILATOR = verilator
-VERILATOR_CFLAGS += -MMD --build -cc \
+VERILATOR_CFLAGS += -MMD --build -cc --trace \
 	-O3 --x-assign fast --x-initial fast --noassert
 
 BUILD_DIR = ./build
@@ -20,8 +20,8 @@ $(SRC_AUTO_BIND): $(NXDC_FILES)
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 # project source
-VSRCS = $(shell find $(abspath ./) -name "*.v")
-CSRCS = $(shell find $(abspath ./) -name "*.cpp")
+VSRCS = $(shell find $(abspath ./vsrc) -name "*.v")
+CSRCS = $(shell find $(abspath ./csrc) -name "*.cpp")
 CSRCS += $(SRC_AUTO_BIND)
 
 # rules for NVBoard
@@ -29,7 +29,7 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 
 # rules for verilator
 INCFLAGS = $(addprefix -I, $(INC_PATH))
-CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\""
+CXXFLAGS += $(INCFLAGS) -DTOP_NAME="\"V$(TOPNAME)\"" -g -O0
 
 $(BIN): $(VSRCS) $(CSRCS) $(NVBOARD_ARCHIVE)
 	@rm -rf $(OBJ_DIR)
@@ -43,7 +43,20 @@ all: default
 run: $(BIN)
 	@$^
 
+waves: waveform.vcd
+	@echo
+	@echo "### WAVES ###"
+	@gtkwave waveform.vcd
+
+waveform.vcd: run
+
+gdb: $(BIN)
+	gdb $(BIN)
+
 clean:
-	rm -rf $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR)
+	@rm -rf logs
+	@rm -rf waveform.vcd
+	@rm -rf compile_commands.json
 
 .PHONY: default all clean run
