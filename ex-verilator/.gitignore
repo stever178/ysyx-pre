@@ -1,21 +1,8 @@
 **/.cache
 **/.vscode
-
-**/*.o
-**/*.out*
-**/out
-**/*.a
-**/*.so
-**/obj*
-
-**/.bsp
-**/.scala-build
-
-**/target
 **/build
 **/obj_dir
 **/compile_commands.json
-
 *.*
 
 !Makefile

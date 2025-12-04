@@ -59,4 +59,4 @@ clean:
 	@rm -rf waveform.vcd
 	@rm -rf compile_commands.json
 
-.PHONY: default all clean run
+.PHONY: default all clean gdb run waves

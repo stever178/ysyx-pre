@@ -20,6 +20,9 @@ struct VswitchDeleter {
 };
 
 int main(int argc, char **argv) {
+  srand (time(NULL));
+  Verilated::commandArgs(argc, argv);
+
   /* RTL dumpfile */
   Verilated::traceEverOn(true);
   // Verilated::mkdir("logs");
