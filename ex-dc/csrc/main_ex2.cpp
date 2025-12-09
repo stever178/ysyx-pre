@@ -5,7 +5,7 @@
 #include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
-#include "Vex1.h"
+#include "Vex2.h"
 
 #define MAX_SIM_TIME 1e6
 
@@ -15,18 +15,6 @@ int main(int argc, char **argv) {
   srand (time(NULL));
   Verilated::commandArgs(argc, argv);
   Verilated::traceEverOn(true);
-
-  /* RTL dumpfile */
-  // Verilated::mkdir("logs");
-
-  // auto contextp = std::make_unique<VerilatedContext>();
-  // contextp->debug(0);
-  // contextp->commandArgs(argc, argv);
-  // contextp->traceEverOn(true);
-
-  // auto dut = std::unique_ptr<Vswitch, VswitchDeleter>(new Vswitch{
-  //   contextp.get()
-  // });
 
   TOP_NAME* dut = new TOP_NAME();
 

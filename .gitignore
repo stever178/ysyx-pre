@@ -25,6 +25,7 @@
 !*.cc
 !*.cpp
 !*.scala
+!*.nxdc
 !.gitignore
 !README.md
 !log
