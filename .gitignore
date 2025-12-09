@@ -24,7 +24,7 @@
 !*.sv
 !*.cc
 !*.cpp
+!*.scala
 !.gitignore
 !README.md
 !log
-

@@ -27,15 +27,13 @@ sudo apt install temurin-17-jdk
 # on the x86_64
 curl -fL https://github.com/coursier/coursier/releases/latest/download/cs-x86_64-pc-linux.gz | gzip -d > cs && chmod +x cs && ./cs setup
 
-# install Scala cli
-#curl -sS "https://virtuslab.github.io/scala-cli-packages/KEY.gpg" | sudo gpg --dearmor  -o /etc/apt/trusted.gpg.d/scala-cli.gpg 2>/dev/null
-#sudo curl -s --compressed -o /etc/apt/sources.list.d/scala_cli_packages.list "https://virtuslab.github.io/scala-cli-packages/debian/scala_cli_packages.list"
-
-sudo apt install scala-cli
-scala-cli install completions
-
 
 # We recommend Chisel users use Mill.
-curl -L https://raw.githubusercontent.com/lefou/millw/0.4.11/millw > mill && chmod +x mill
+#curl -L https://raw.githubusercontent.com/lefou/millw/0.4.11/millw > mill && chmod +x mill
+curl -L https://repo1.maven.org/maven2/com/lihaoyi/mill-dist/1.1.0-RC3/mill-dist-1.1.0-RC3-mill.sh -o mill
+chmod +x mill
 sudo mv mill /usr/local/bin/
+
+mill mill.tabcomplete/install
+#echo '*.mill linguist-language=Scala' > .gitattributes
 
