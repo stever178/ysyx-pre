@@ -1,4 +1,5 @@
 #!/bin/sh
+# usage: cd ex-dc; ../scripts/yosys-eval.sh ex?
 
 top=$1
 

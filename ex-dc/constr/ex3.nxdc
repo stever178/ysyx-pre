@@ -1,0 +1,10 @@
+top=ex3
+
+A (SW3, SW2, SW1, SW0)
+B (SW7, SW4, SW5, SW4)
+sel (BTNL, BTNC, BTNR)
+
+out_o LD7
+out_c LD6
+out_s (LD3, LD2, LD1, LD0)
+out_z LD5
