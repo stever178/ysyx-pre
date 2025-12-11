@@ -3,10 +3,11 @@ module ex2(
   input  [7:0] x,
   input  EN,
   output reg [2:0] y,
-  output reg [6:0] seg
+  output reg [6:0] seg,
+  output valid
 );
   prio_encode83 encoder (
-    .x(x), .en(EN), .y(y)
+    .din(x), .en(EN), .dout(y), .valid(valid)
   );
   light_seg seg0 (
     .x(y), .seg(seg)
@@ -33,19 +34,21 @@ module light_seg(
 endmodule
 
 module prio_encode83(
-  input  [7:0] x,
+  input  [7:0] din,
   input  en,
-  output reg [2:0] y
+  output reg [2:0] dout,
+  output valid
 );
   integer i;
-  always @(x or en) begin
+  always @(din or en) begin
     if (en) begin
-      y = 3'b000;
+      dout = 3'b000;
       for(i = 0; i <= 7; i = i + 1)
-        if(x[i] == 1)  y = i[2:0];
+        if(din[i] == 1)  dout = i[2:0];
     end
-    else  y = 3'b000;
+    else  dout = 3'b000;
   end
+  assign valid = |din;
 endmodule
 
 module encode83(

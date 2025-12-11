@@ -8,4 +8,3 @@ BEGIN { add = 0; del = 0 }
 }
 END { printf "%d insertions(+), %d deletions(-), %d total\n", add, del, add + del }
 '
-

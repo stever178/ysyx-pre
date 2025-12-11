@@ -1,11 +1,11 @@
 BUILD_DIR = ./build
 
 EX_V_FILES := $(wildcard ./vsrc/ex*.v)
-EX_NUMS := $(sort $(patsubst ./vsrc/ex%.v,%,$(EX_V_FILES)))
+EX_SUFFIX := $(sort $(patsubst ./vsrc/ex%.v, %, $(EX_V_FILES)))
 
-EX_TARGETS = $(addprefix build-ex, $(EX_NUMS))
-RUN_TARGETS = $(addprefix run-ex, $(EX_NUMS))
-GDB_TARGETS = $(addprefix gdb-ex, $(EX_NUMS))
+EX_TARGETS = $(addprefix build-ex, $(EX_SUFFIX))
+RUN_TARGETS = $(addprefix run-ex, $(EX_SUFFIX))
+GDB_TARGETS = $(addprefix gdb-ex, $(EX_SUFFIX))
 
 VERILATOR = verilator
 VERILATOR_CFLAGS += -MMD --build -cc --trace \
@@ -59,7 +59,7 @@ clean:
 	@rm -rf $(BUILD_DIR) logs waveform.vcd compile_commands.json
 
 list:
-	@echo "Found exercises: $(EX_NUMS)"
+	@echo "Found exercises: $(EX_SUFFIX)"
 
 .PHONY: default all clean waves list \
 	$(EX_TARGETS) $(RUN_TARGETS) $(GDB_TARGETS)
