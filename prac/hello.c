@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <readline/readline.h>
+#include <errno.h>
+#include <inttypes.h>
 // #include <readline/history.h>
 
 int main() {
@@ -11,7 +13,11 @@ int main() {
 	for (int t = 1; t <= 100; t ++) {
 		sum += t;
 	}
-	printf("Hello World, %5lu\n", strtoul("0x8000'0000", NULL, 0));
+    errno = 0;
+    char *nptr = "0x8000'0000U";
+    char *end = NULL;
+    uint64_t num = strtoull(nptr, &end, 0);
+	printf("Hello World, %5lu, errno: %d\n", num, errno);
 
 	line_read = readline("(test) ");
 	printf("read result: %s\n", line_read);

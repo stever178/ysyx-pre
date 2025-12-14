@@ -1,6 +1,6 @@
 #!/bin/sh
 
-git log --oneline --since="yesterday 08:00" --until="today 02:00" --numstat | awk '
+git log --oneline --since="today 16:00" --until="today 22:00" --numstat | awk '
 BEGIN { add = 0; del = 0 }
 /^[0-9-]+[[:space:]]+[0-9-]+[[:space:]]+/ {
     add += $1
