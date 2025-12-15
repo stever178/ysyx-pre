@@ -1,10 +1,20 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<inttypes.h>
 
 int main() {
-	printf("0x%x\n", 0xa3ad8855U / 0x535464e9U);
-	printf("0x%x\n", 0x30e1781dU / 0x535464e9U);
+	system("mkdir -p /tmp/codes");
+	uint32_t result, val1, val2;
+	val1 = ~  1945618903U;
+	val2 = 2121226598U;
+	result = val1 << val2;
 
-	printf("0x%x\n", ((  0x261704baU  -  ( 0x3a2384efU)  *(  ( 0x6a50c09eU  ) ) )  *  666852862U + ( 0x08e22e70U  / 1801662381U  *           1385513709U -  432455393U -  0x48e73474U  *(  1954772595U )  + 400694143U +  0x363bcd9aU  -  ( 424331151U ))  ));
-	printf("0x%x\n", ((  0x261704baU  -  ( 0x3a2384efU)  *(  ( 0x6a50c09eU  ) ) )  *  666852862U + ( 0x08e22e70U  / 1801662381U  *           1385513709U -  432455393U -  0x48e73474U  *(  1954772595U )  + 400694143U +  0x363bcd9aU  -  ( 424331151U ))  )  / 1398039785U);
+	printf("0x%x\n", result);
+	printf("0x%x\n", ~  1945618903U  <<  (  (( 2121226598U )) ));
+
+	printf("0x%x\n", 1 / ( 2-20+18));
+
+	printf("0x%x\n", ( ((  0x2a1b3809U < ~ 636574516U )  | 712431447U )  << ~ 1867326510U  )  ^( ( (  1126749546U  > ! 580538507U )!=~ 641232135U  ^ ! 0x2e4f2313U <=( 0x09968507U  )  ==  ( 1623343393U)  >>  1338652346U | !  0x48655ba4U )  )  -  0x34cb205bU| ~  0x4723e7c7U);
+
 	return 0;
 }
