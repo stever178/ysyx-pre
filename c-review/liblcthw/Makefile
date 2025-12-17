@@ -1,16 +1,12 @@
 CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
-LIBS=-Lbuild -llcthw $(OPTLIBS)
-# Makefile 所在的目录
-LDFLAGS=-Wl,-rpath,$(CURDIR)/build
-
+LIBS=-ld $(OPTLIBS)
 PREFIX?=/usr/local
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c, %.o, $(SOURCES))
 
 TEST_SRC=$(wildcard tests/*_tests.c)
-TEST_OBJ=$(patsubst %.c, %.o, $(TEST_SRC))
-TESTS=$(patsubst %.c, %, $(TEST_SRC))
+TESTS=$(patsubst %.c, %, $(TEST_SR))
 
 TARGET=build/liblcthw.a
 SO_TARGET=$(patsubst %.a, %.so, $(TARGET))
@@ -23,7 +19,7 @@ dev: all
 
 $(TARGET): CFLAGS += -fPIC
 $(TARGET): build $(OBJECTS)
-	ar rcs $@ $(OBJECTS)
+	ar rcs $@ $(OBJECts)
 	ranlib $@
 
 $(SO_TARGET): $(TARGET) $(OBJECTS)
@@ -35,15 +31,7 @@ build:
 
 # The Unit Tests
 .PHONY: tests
-tests: CFLAGS += -fPIC
-tests: $(TESTS) $(SO_TARGET)
-
-# 构建测试程序
-#$(TESTS): $(TEST_SRC) $(SO_TARGET)
-$(TESTS): % : %.c $(SO_TARGET)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LIBS)
-
-# 运行测试脚本
+tests: CFLAGS += $(TARGET)
 tests: $(TESTS)
 	sh ./tests/runtests.sh
 
@@ -52,7 +40,7 @@ valgrind:
 
 # The Cleaner
 clean:
-	rm -rf build $(OBJECTS) $(TESTS) $(TEST_OBJ)
+	rm -rf build $(OBJECTS) $(TESTS)
 	rm -f tests/tests.log
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`

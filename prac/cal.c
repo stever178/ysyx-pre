@@ -3,6 +3,10 @@
 #include<inttypes.h>
 
 int main() {
+	int arr[2] = {1, 2};
+	printf("%d\n", arr[100]);
+	return 0;
+
 	system("mkdir -p /tmp/codes");
 	uint32_t result, val1, val2;
 	val1 = ~  1945618903U;

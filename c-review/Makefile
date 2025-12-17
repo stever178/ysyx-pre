@@ -1,15 +1,37 @@
+CFLAGS = -g -Wall -fsanitize=address
+CFLAGS += -Werror=shift-count-overflow -Werror=div-by-zero
+LFLAGS ?=
 
-CC=gcc
-CFLAGS=-Wall -g
+BUILD_DIR = ./build
 
+# todo
 SOURCES := $(wildcard ex*.c)
-OBJECTS := $(SOURCES:.c=.o)
-OUT := ex1 ex3
 
-all: ${OUT}
-	gcc ex1.c -o ex1
-	gcc ex3.c -o ex3
+C_SUFFIX := $(patsubst %.c, %, $(SOURCES))
+
+BINS := $(SOURCES:%.c=build-%.out)
+BIN_TARGETS = $(addprefix build-, $(C_SUFFIX))
+RUN_TARGETS = $(addprefix run-, $(C_SUFFIX))
+GDB_TARGETS = $(addprefix gdb-, $(C_SUFFIX))
+
+$(BUILD_DIR)/%.out: ./%.c
+	@echo "Building $* ..."
+	@$(shell mkdir -p $(BUILD_DIR))
+	@gcc $(CFLAGS) $< -o $@
+
+$(BIN_TARGETS): build-%: $(BUILD_DIR)/%.out
+
+$(RUN_TARGETS): run-%: $(BUILD_DIR)/%.out
+	@echo "Running $* ..."
+	@$<
+
+$(GDB_TARGETS): gdb-%: $(BUILD_DIR)/%.out
+	@echo "Debugging $* with GDB ..."
+	@gdb $<
 
 clean:
-	@rm -f ex1
-	@find . -type f -executable -delete
+	@rm -rf $(BUILD_DIR)
+	@find . -maxdepth 1 -type f -executable -delete
+
+.PHONY: default all clean \
+	$(BIN_TARGETS) $(RUN_TARGETS) $(GDB_TARGETS) 

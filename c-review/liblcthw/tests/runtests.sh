@@ -1,10 +1,9 @@
 #!/bin/bash
-#
+
 echo ""
 echo "==== Running unit tests:"
 
 for i in tests/*_tests; do
-	echo ""
 	echo "---- running $i "
 	if test -f $i; then
 		if $VALGRIND ./$i 2>> tests/tests.log; then
