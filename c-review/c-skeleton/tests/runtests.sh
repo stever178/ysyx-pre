@@ -1,10 +1,12 @@
-echo "Running unit tests:"
+echo ""
+echo "==== Running unit tests:"
 
 for i in tests/*_tests
 do
+	echo "---- running $i "
     if test -f $i
     then
-        if $VALGRIND ./$i 2>> tests/tests.log
+        if $VALGRIND ./$i build/libex29.so print_a_message "hello there" 2>> tests/tests.log
         then
             echo $i PASS
         else

@@ -1,5 +1,7 @@
-CFLAGS = -g -Wall -fsanitize=address
+CFLAGS = -g -Wall -O0
 CFLAGS += -Werror=shift-count-overflow -Werror=div-by-zero
+CFLAGS += -fsanitize=address
+
 LFLAGS ?=
 
 BUILD_DIR = ./build
@@ -31,7 +33,6 @@ $(GDB_TARGETS): gdb-%: $(BUILD_DIR)/%.out
 
 clean:
 	@rm -rf $(BUILD_DIR)
-	@find . -maxdepth 1 -type f -executable -delete
 
 .PHONY: default all clean \
 	$(BIN_TARGETS) $(RUN_TARGETS) $(GDB_TARGETS) 

@@ -1,3 +1,5 @@
+ex28 : `c-skeleton`
+
 `c-skeleton`（项目框架目录），使用它来创建一个`liblcthw`项目：
 
 ```shell
