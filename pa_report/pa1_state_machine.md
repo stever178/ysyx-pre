@@ -1,6 +1,7 @@
-def state: (PC, r1, r2)
+`def state: (PC, r1, r2)`
 
 target: 1+2+...+100
+```
 // PC: instruction    | // label: statement
 0: mov  r1, 0         |  pc0: r1 = 0;
 1: mov  r2, 0         |  pc1: r2 = 0;
@@ -8,8 +9,10 @@ target: 1+2+...+100
 3: add  r1, r1, r2    |  pc3: r1 = r1 + r2;
 4: blt  r2, 100, 2    |  pc4: if (r2 < 100) goto pc2;   // branch if less than
 5: jmp 5              |  pc5: goto pc5;
+```
 
 state machine:
+```
 (0, x, x) -> 
 (1, 0, x) -> 
 
@@ -36,3 +39,4 @@ state machine:
 (4, 5050, 100) ->
 
 (5, 5050, 100) -> <-
+```
