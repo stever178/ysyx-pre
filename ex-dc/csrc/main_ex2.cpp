@@ -27,35 +27,17 @@ int main(int argc, char **argv) {
   nvboard_bind_all_pins(dut);
   nvboard_init();
 
-  // int8_t X0, X1, X2, X3, Y;
-  
   vluint64_t sim_time = 0;
-  // while (!contextp->gotFinish()) {
-  // while (sim_time <= MAX_SIM_TIME) {
   while (1) {
     nvboard_update();
-
-    // dut->X0 = X0;
-    // dut->X1 = X1;
-
     dut->eval();
     
-    // m_trace->dump(sim_time);
-    // printf("time: %2zd, X0 = %2d, X1 = %2d, X2 = %2d, X3 = %2d, F = %2d\n ",
-    //        sim_time, X0, X1, X2, X3, dut->F);
-    // VL_PRINTF("a = %d, b = %d, f = %d\n ", a, b, top->f);
-    // assert(top->f == (a ^ b));
-    
-    // contextp->timeInc(1); // 1 timeprecision period passes...
     sim_time++;
   }
-
   nvboard_quit();
 
   m_trace->close();
-
-  // delete dut;
-  // delete contextp;
+  delete dut;
 
   return 0;
 }

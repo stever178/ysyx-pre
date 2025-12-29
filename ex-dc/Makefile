@@ -1,7 +1,8 @@
 BUILD_DIR = ./build
+
 BUILD_ABS_DIR = $(abspath $(BUILD_DIR))
-CONSTR_ABS_DIR = $(abspath ./constr)
 VSRC_ABS_DIR = $(abspath ./vsrc)
+SDC_ABS_DIR = $(abspath ./scripts)
 
 EX_V_FILES := $(wildcard ./vsrc/ex*.v)
 EX_SUFFIX := $(sort $(patsubst ./vsrc/ex%.v, %, $(EX_V_FILES)))
@@ -58,8 +59,8 @@ $(GDB_TARGETS): gdb-ex%: $(BUILD_DIR)/ex%
 
 $(STA_TARGETS): sta-ex%: ./constr/ex%.sdc ./vsrc/ex%.v 
 	@make -C $(PRJ)/yosys-sta sta \
-		DESIGN=ex$* SDC_FILE=$(CONSTR_ABS_DIR)/ex$*.sdc \
-		CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(BUILD_ABS_DIR)/result_ex$* \
+		DESIGN=ex$* SDC_FILE=$(SDC_ABS_DIR)/ex$*.sdc \
+		CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(BUILD_ABS_DIR)/result_sta_ex$* \
 		RTL_FILES="$(VSRC_ABS_DIR)/ex$*.v"
 
 waves: waveform.vcd
