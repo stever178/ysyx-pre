@@ -264,7 +264,8 @@ int main(int argc, char *argv[])
     if(argc > 3) id = atoi(argv[3]);
     if(id >= MAX_ROWS) die("There's not that many records.", conn);
 
-    switch(action) {
+    switch (action) {
+        // create
         case 'c':
 			Database_create(conn);
 			Database_write(conn);
@@ -275,6 +276,8 @@ int main(int argc, char *argv[])
             if(argc != 4) die("Need an id to get", conn);
             Database_get(conn, id);
             break;
+
+        // print
 		case 'l':
             Database_list(conn);
             break;

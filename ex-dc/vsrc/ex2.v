@@ -1,3 +1,4 @@
+// https://nju-projectn.github.io/dlco-lecture-note/exp/02.html#id9
 
 module ex2(
   input  [7:0] x,

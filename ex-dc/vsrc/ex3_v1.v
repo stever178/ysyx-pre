@@ -1,4 +1,6 @@
-module ex3_v2(
+// https://nju-projectn.github.io/dlco-lecture-note/exp/06.html#id5
+
+module ex3(
 	input [3:0] A,
 	input [3:0] B,
 	input [2:0] sel,
@@ -32,19 +34,6 @@ module alu_4bit(
     wire [4:0] add_result = {1'b0, A} + {1'b0, B};
     wire [4:0] sub_result = {1'b0, A} + {1'b0, ~B} + 5'b00001;
 	reg flag_o_sub;
-
-  MuxKey #(8, 3, 3) alu_ (out_s, sel, {
-    8'b000, 3'b000,
-    8'b001, 3'b001,
-    8'b010, 3'b010,
-    8'b011, 3'b011,
-    
-    8'b100, 3'b000,
-    8'b101, 3'b001,
-    8'b110, 3'b010,
-    8'b111, 3'b011,
-  });
-
 
 	always @(*) begin
 		flag_o_sub = 1'b0;

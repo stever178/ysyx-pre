@@ -1,5 +1,6 @@
 CFLAGS = -g -Wall -O0
-CFLAGS += -Werror=shift-count-overflow -Werror=div-by-zero
+# CFLAGS += -Werror=shift-count-overflow
+CFLAGS += -Werror=div-by-zero
 # CFLAGS += -fsanitize=address
 
 LFLAGS ?=
@@ -15,9 +16,11 @@ BIN_TARGETS = $(addprefix build-, $(C_SUFFIX))
 RUN_TARGETS = $(addprefix run-, $(C_SUFFIX))
 GDB_TARGETS = $(addprefix gdb-, $(C_SUFFIX))
 
+$(info "========")
+
 $(BUILD_DIR)/%.out: ./%.c
 	@echo "Building $* ..."
-	@$(shell mkdir -p $(BUILD_DIR))
+	@mkdir -p $(BUILD_DIR)
 	@gcc $(CFLAGS) $< -o $@
 
 $(BIN_TARGETS): build-%: $(BUILD_DIR)/%.out

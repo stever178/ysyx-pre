@@ -1,0 +1,8 @@
+top=ex6_barrel_shifter
+
+LRw SW13
+ALw SW12
+shamt (SW11, SW10, SW9)
+data_in (SW7, SW6, SW5, SW4, SW3, SW2, SW1, SW0)
+
+data_out (LD7, LD6, LD5, LD4, LD3, LD2, LD1, LD0)

@@ -9,6 +9,10 @@
 
 #define MAX_SIM_TIME 1e4
 
+/* todo */
+static bool flag_use_board = false;
+static bool flag_single_eval = !true;
+
 void nvboard_bind_all_pins(TOP_NAME *top);
 
 /*
@@ -67,10 +71,23 @@ static void single_cycle(TOP_NAME *dut) {
   dut->eval();
 }
 
+static void single_eval(TOP_NAME *dut) {
+  dut->clk = !dut->clk;
+  dut->eval();
+}
+
+static void exec_once(TOP_NAME *dut) {
+  if (flag_single_eval)
+    single_eval(dut);
+  else
+    single_cycle(dut);
+}
+
 static void reset(TOP_NAME *dut, int n) {
   dut->reset = 1;
-  while (n-- > 0)
-    single_cycle(dut);
+  while (n-- > 0) {
+    exec_once(dut);
+  }
   dut->reset = 0;
 }
 
@@ -81,9 +98,6 @@ int main(int argc, char **argv) {
 
   TOP_NAME *dut = new TOP_NAME();
 
-  /* todo */
-  bool flag_use_board = false;
-  // flag_use_board = true;
   if (flag_use_board) {
     /* board */
     nvboard_bind_all_pins(dut);
@@ -120,9 +134,9 @@ int main(int argc, char **argv) {
          dut->data_out);
 
   while (sim_time < MAX_SIM_TIME) {
-    single_cycle(dut);
+    exec_once(dut);
 
-    if (dut->clk) {
+    if (flag_single_eval || dut->clk) {
       // ref model
       // next_state = { ^{state[4:2], state[0]}, state[7:1]};
       uint8_t xor_result = ((state >> 4) & 1) ^ ((state >> 3) & 1) ^
@@ -136,14 +150,13 @@ int main(int argc, char **argv) {
       seg1 = seg_table[digit1];
 
       // assert
-      printf("[%04lu] state: 0x%02x ; dut: 0x%02x\n", sim_time, state,
+      printf("[%04lu] state: 0x%02x ; dut: 0x%02x\n", sim_time++, state,
              dut->data_out);
       assert(dut->seg1 == seg1);
       assert(dut->seg0 == seg0);
     }
 
     // m_trace->dump(sim_time);
-    sim_time++;
   }
 
   m_trace->close();

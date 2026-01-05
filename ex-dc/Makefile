@@ -31,7 +31,7 @@ INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 # Build rules
 $(BUILD_DIR)/ex%: ./vsrc/ex%.v ./csrc/main_ex%.cpp $(BUILD_DIR)/auto_bind_ex%.cpp $(NVBOARD_ARCHIVE)
-	@echo "Building ex$*..."
+	@echo "Building ex$* ..."
 	@rm -rf $(BUILD_DIR)/obj_dir_ex$*
 	$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILATOR_FLAGS) \
 		--top-module ex$* \
@@ -50,14 +50,15 @@ default: $(EX_TARGETS)
 $(EX_TARGETS): build-ex%: $(BUILD_DIR)/ex%
 
 $(RUN_TARGETS): run-ex%: $(BUILD_DIR)/ex%
-	@echo "Running ex$*..."
+	@echo "Running ex$* ..."
 	@$<
 
 $(GDB_TARGETS): gdb-ex%: $(BUILD_DIR)/ex%
-	@echo "Debugging ex$* with GDB..."
+	@echo "Debugging ex$* with GDB ..."
 	gdb $<
 
 $(STA_TARGETS): sta-ex%: ./constr/ex%.sdc ./vsrc/ex%.v 
+	@echo "Running static timing analysis for ex$* ..."
 	@make -C $(PRJ)/yosys-sta sta \
 		DESIGN=ex$* SDC_FILE=$(SDC_ABS_DIR)/ex$*.sdc \
 		CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(BUILD_ABS_DIR)/result_sta_ex$* \

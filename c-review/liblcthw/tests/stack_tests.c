@@ -1,7 +1,7 @@
 #include "minunit.h"
 #include <assert.h>
-#include <lcthw/stack.h>
-//#include <lcthw/stack_darray.h>
+// #include <lcthw/stack.h>
+#include <lcthw/stack_darray.h>
 
 static Stack *stack = NULL;
 char *tests[] = {"test1 data", "test2 data", "test3 data"};

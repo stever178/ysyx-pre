@@ -1,3 +1,5 @@
+// https://nju-projectn.github.io/dlco-lecture-note/exp/02.html#id9
+
 `include "mux_template.v"
 
 module ex2_v2(

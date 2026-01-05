@@ -1,21 +1,22 @@
-echo ""
-echo "==== Running unit tests:"
+echo "\n==== Running unit tests ====\n"
+
+TEST_LOG="tests/tests.log"
+echo "" > $TEST_LOG
 
 for i in tests/*_tests
 do
 	echo "---- running $i "
     if test -f $i
     then
-        if $VALGRIND ./$i 2>> tests/tests.log
+        if $VALGRIND ./$i 2>>$TEST_LOG
         then
             echo $i PASS
         else
-            echo "ERROR in test $i: here's tests/tests.log"
+            echo "ERROR in test $i: here's $TEST_LOG"
             echo "------"
-            tail tests/tests.log
+            tail $TEST_LOG
             exit 1
         fi
     fi
+    echo ""
 done
-
-echo ""

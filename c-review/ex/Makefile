@@ -1,6 +1,6 @@
 CFLAGS = -g -Wall -O0
-CFLAGS += -Werror=shift-count-overflow -Werror=div-by-zero
-CFLAGS += -fsanitize=address
+# CFLAGS += -Werror=shift-count-overflow -Werror=div-by-zero
+# CFLAGS += -fsanitize=address
 
 LFLAGS ?=
 
@@ -32,7 +32,8 @@ $(GDB_TARGETS): gdb-%: $(BUILD_DIR)/%.out
 	@gdb $<
 
 clean:
-	@rm -rf $(BUILD_DIR)
+	rm -rf $(BUILD_DIR)
+	rm ex{1..18}
 
 .PHONY: default all clean \
 	$(BIN_TARGETS) $(RUN_TARGETS) $(GDB_TARGETS) 
