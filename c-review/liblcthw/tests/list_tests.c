@@ -96,17 +96,17 @@ char *test_shift()
 }
 
 
-char *test_copy()
+char *test_cut()
 {
-    mu_assert(List_count(list) == 0, "Wrong count before copy.");
+    mu_assert(List_count(list) == 0, "Wrong count before cut.");
 	List_push(list, test1);
     List_push(list, test2);
     List_push(list, test3);
     mu_assert(List_count(list) == 3, "Wrong count on push.");
     mu_assert(List_last(list) == test3, "Wrong last value.");
 	
-	List *list_new= ListCopy(list, 0, 2);
-    mu_assert(List_count(list) == List_count(list_new), "Wrong length after copy.");
+	List *list_new= List_cut(list, 0, 2);
+    mu_assert(List_count(list) == List_count(list_new), "Wrong length after cut.");
     mu_assert(List_first(list_new) == test1, "Wrong first value.");
     mu_assert(List_last(list_new) == test3, "Wrong last value.");
     List_destroy(list_new);
@@ -123,7 +123,7 @@ char *all_tests() {
     mu_run_test(test_unshift);
     mu_run_test(test_remove);
     mu_run_test(test_shift);
-    mu_run_test(test_copy);
+    mu_run_test(test_cut);
 	// more tests to be added ...
     mu_run_test(test_destroy);
 

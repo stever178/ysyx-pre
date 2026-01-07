@@ -7,6 +7,7 @@
 // #include <readline/history.h>
 
 int main() {
+	printf("test[%s]\n");
 	static char *line_read = NULL;
 
 	int sum = 0;

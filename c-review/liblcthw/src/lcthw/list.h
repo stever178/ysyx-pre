@@ -6,15 +6,15 @@
 struct ListNode;
 
 typedef struct ListNode {
-    struct ListNode *next;
-    struct ListNode *prev;
-    void *value;
+  struct ListNode *next;
+  struct ListNode *prev;
+  void *value;
 } ListNode;
 
 typedef struct List {
-    int count;
-    ListNode *first;
-    ListNode *last;
+  int count;
+  ListNode *first;
+  ListNode *last;
 } List;
 
 List *List_create();
@@ -34,10 +34,13 @@ void *List_shift(List *list);
 
 void *List_remove(List *list, ListNode *node);
 
-void *ListCopy(List *list, int start, int end);
+void *List_cut(List *list, int start, int end);
+void List_copy_from_src(List *list_dst, List *list_src, int dst_start,
+                        int dst_end);
 
-#define LIST_FOREACH(L, S, M, V) ListNode *_node = NULL;\
-    ListNode *V = NULL;\
-    for(V = _node = L->S; _node != NULL; V = _node = _node->M)
+#define LIST_FOREACH(L, S, M, V)                                               \
+  ListNode *_node = NULL;                                                      \
+  ListNode *V = NULL;                                                          \
+  for (V = _node = L->S; _node != NULL; V = _node = _node->M)
 
 #endif
