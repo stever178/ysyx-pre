@@ -1,6 +1,8 @@
 BUILD_DIR = ./build
 
 BUILD_ABS_DIR = $(abspath $(BUILD_DIR))
+NXDC_ABS_DIR = $(abspath ./constr)
+CSRC_ABS_DIR = $(abspath ./csrc)
 VSRC_ABS_DIR = $(abspath ./vsrc)
 SDC_ABS_DIR = $(abspath ./scripts)
 
@@ -9,6 +11,7 @@ EX_SUFFIX := $(sort $(patsubst ./vsrc/ex%.v, %, $(EX_V_FILES)))
 
 EX_TARGETS = $(addprefix build-ex, $(EX_SUFFIX))
 RUN_TARGETS = $(addprefix run-ex, $(EX_SUFFIX))
+SHOW_TARGETS = $(addprefix show-ex, $(EX_SUFFIX))
 GDB_TARGETS = $(addprefix gdb-ex, $(EX_SUFFIX))
 STA_TARGETS = $(addprefix sta-ex, $(EX_SUFFIX))
 
@@ -21,7 +24,7 @@ VERILATOR_FLAGS = $(addprefix -I, $(VERILATOR_INC_PATH))
 $(shell mkdir -p $(BUILD_DIR))
 
 # constraint file
-$(BUILD_DIR)/auto_bind_ex%.cpp: constr/ex%.nxdc
+$(BUILD_DIR)/auto_bind_ex%.cpp: $(NXDC_ABS_DIR)/ex%.nxdc
 	python3 $(NVBOARD_HOME)/scripts/auto_pin_bind.py $^ $@
 
 # rules for NVBoard
@@ -30,8 +33,9 @@ include $(NVBOARD_HOME)/scripts/nvboard.mk
 INCFLAGS = $(addprefix -I, $(INC_PATH))
 
 # Build rules
-$(BUILD_DIR)/ex%: ./vsrc/ex%.v ./csrc/main_ex%.cpp $(BUILD_DIR)/auto_bind_ex%.cpp $(NVBOARD_ARCHIVE)
-	@echo "Building ex$* ..."
+$(BUILD_DIR)/ex%: $(VSRC_ABS_DIR)/ex%.v $(CSRC_ABS_DIR)/main_ex%.cpp \
+				  $(BUILD_DIR)/auto_bind_ex%.cpp $(NVBOARD_ARCHIVE)
+	@echo "\nBuilding ex$* ..."
 	@rm -rf $(BUILD_DIR)/obj_dir_ex$*
 	$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILATOR_FLAGS) \
 		--top-module ex$* \
@@ -39,26 +43,29 @@ $(BUILD_DIR)/ex%: ./vsrc/ex%.v ./csrc/main_ex%.cpp $(BUILD_DIR)/auto_bind_ex%.cp
 		$(abspath ./csrc/main_ex$*.cpp) \
 		$(abspath $(BUILD_DIR)/auto_bind_ex$*).cpp \
 		$(NVBOARD_ARCHIVE) \
-		$(addprefix -CFLAGS , $(INCFLAGS) -DTOP_NAME="\"Vex$*\"" -g -O0) \
+		$(addprefix -CFLAGS , $(INCFLAGS) -DTOP_NAME="\"Vex$*\"" $(EXTRA_CFLAGS) -g -O0) \
 		$(addprefix -LDFLAGS , $(LDFLAGS)) \
 		--Mdir $(BUILD_DIR)/obj_dir_ex$* \
 		--exe -o $(abspath $@)
-
-default: $(EX_TARGETS)
 
 # Static pattern rules
 $(EX_TARGETS): build-ex%: $(BUILD_DIR)/ex%
 
 $(RUN_TARGETS): run-ex%: $(BUILD_DIR)/ex%
-	@echo "Running ex$* ..."
+	@echo "\nRunning ex$* ..."
 	@$<
 
+# $(SHOW_TARGETS): EXTRA_CFLAGS = -DUSE_NVBOARD
+$(SHOW_TARGETS): show-ex%: $(BUILD_DIR)/ex%
+	@echo "\nRunning ex$* (with NVBoard) ..."
+	@$< --use_board
+
 $(GDB_TARGETS): gdb-ex%: $(BUILD_DIR)/ex%
-	@echo "Debugging ex$* with GDB ..."
+	@echo "\nDebugging ex$* with GDB ..."
 	gdb $<
 
-$(STA_TARGETS): sta-ex%: ./constr/ex%.sdc ./vsrc/ex%.v 
-	@echo "Running static timing analysis for ex$* ..."
+$(STA_TARGETS): sta-ex%: $(SDC_ABS_DIR)/ex%.sdc $(VSRC_ABS_DIR)/ex%.v 
+	@echo "\nRunning static timing analysis for ex$* ..."
 	@make -C $(PRJ)/yosys-sta sta \
 		DESIGN=ex$* SDC_FILE=$(SDC_ABS_DIR)/ex$*.sdc \
 		CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(BUILD_ABS_DIR)/result_sta_ex$* \
@@ -71,7 +78,9 @@ clean:
 	@rm -rf $(BUILD_DIR) logs waveform.vcd compile_commands.json
 
 list:
-	@echo "Found exercises: $(EX_SUFFIX)"
+	@echo "\nFound exercises: $(EX_SUFFIX)"
+
+default: $(EX_TARGETS)
 
 .PHONY: default all clean waves list \
-	$(EX_TARGETS) $(RUN_TARGETS) $(GDB_TARGETS) $(STA_TARGETS)
+	$(EX_TARGETS) $(RUN_TARGETS) $(SHOW_TARGETS) $(GDB_TARGETS) $(STA_TARGETS)

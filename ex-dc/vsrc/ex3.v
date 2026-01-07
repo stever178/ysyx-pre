@@ -6,10 +6,10 @@ module ex3(
 	input [3:0] A,
 	input [3:0] B,
 	input [2:0] sel,
-	output reg out_o,
-	output reg out_c,
-	output reg [3:0] out_s,
-	output reg out_z
+	output out_o,
+	output out_c,
+	output [3:0] out_s,
+	output out_z
 );
 	alu_4bit alu0 (
 		.A(A),
@@ -27,10 +27,10 @@ module alu_4bit(
 	input [3:0] A,
 	input [3:0] B,
 	input [2:0] sel,
-	output reg out_o,
-	output reg out_c,
-	output reg [3:0] out_s,
-	output reg out_z
+	output out_o,
+	output out_c,
+	output [3:0] out_s,
+	output out_z
 );
     wire [4:0] add_result = {1'b0, A} + {1'b0, B};
     wire [4:0] sub_result = {1'b0, A} + {1'b0, ~B} + 5'b00001;

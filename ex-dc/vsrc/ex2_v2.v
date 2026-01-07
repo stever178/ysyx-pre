@@ -5,8 +5,8 @@
 module ex2_v2(
   input  [7:0] x,
   input  EN,
-  output reg [2:0] y,
-  output reg [6:0] seg,
+  output [2:0] y,
+  output [6:0] seg,
   output valid
 );
   prio_encode83 encoder (
@@ -19,27 +19,24 @@ endmodule
 
 module light_seg(
   input [2:0] x,
-  output reg [6:0] seg
+  output [6:0] seg
 );
-  always @(x) begin
-    case (x)
-      3'b000 : seg = 7'b000_0001;
-      3'b001 : seg = 7'b100_1111;
-      3'b010 : seg = 7'b001_0010;
-      3'b011 : seg = 7'b000_0110;
-      3'b100 : seg = 7'b100_1100;
-      3'b101 : seg = 7'b010_0100;
-      3'b110 : seg = 7'b010_0000;
-      3'b111 : seg = 7'b000_1101;
-      default : seg = 7'b111_1111;
-    endcase
-  end
+  MuxKey #(8, 3, 7) mux_8to3 (seg, x, {
+    3'b000, 7'b000_0001,
+    3'b001, 7'b100_1111,
+    3'b010, 7'b001_0010,
+    3'b011, 7'b000_0110,
+    3'b100, 7'b100_1100,
+    3'b101, 7'b010_0100,
+    3'b110, 7'b010_0000,
+    3'b111, 7'b000_1101
+  });
 endmodule
 
 module prio_encode83(
   input  [7:0] din,
   input  en,
-  output reg [2:0] dout,
+  output [2:0] dout,
   output valid
 );
   wire [7:0] sel_onehot;

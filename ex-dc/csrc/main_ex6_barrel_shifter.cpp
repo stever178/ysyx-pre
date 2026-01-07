@@ -1,44 +1,35 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Vex6_barrel_shifter.h"
 #include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-#define MAX_SIM_TIME 1e6
-
 void nvboard_bind_all_pins(TOP_NAME *top);
 
+#define MAX_SIM_TIME 1e4
+
 /*
-  input LRw,
-  input ALw,
-  input [2:0] shamt,
-  input [7:0] data_in,
-  output [7:0] data_out
+module ex6_barrel_shifter(
+        input LRw,
+        input ALw,
+        input [2:0] shamt,
+    input [7:0] data_in,
+    output [7:0] data_out
+);
 */
-struct alu_data {
+struct DUT_INPUT {
   uint8_t LRw, ALw, shamt;
   uint8_t data_in;
 } data_arr[] = {
-    {1, 0, 1, 0x01},
-    {1, 1, 1, 0x03},
-    {1, 0, 3, 0x05},
-    {1, 1, 3, 0x09},
-    {1, 0, 2, 0x0a},
-    {1, 1, 2, 0x11},
-    {1, 0, 4, 0x31},
-    {1, 1, 7, 0x21},
+    {1, 0, 1, 0x01}, {1, 1, 1, 0x03}, {1, 0, 3, 0x05}, {1, 1, 3, 0x09},
+    {1, 0, 2, 0x0a}, {1, 1, 2, 0x11}, {1, 0, 4, 0x31}, {1, 1, 7, 0x21},
 
-    {0, 0, 1, 0x01},
-    {0, 1, 1, 0x03},
-    {0, 0, 3, 0x05},
-    {0, 1, 3, 0x09},
-    {0, 0, 2, 0x0a},
-    {0, 1, 2, 0x11},
-    {0, 0, 4, 0x31},
-    {0, 1, 7, 0x21},
+    {0, 0, 1, 0x01}, {0, 1, 1, 0x03}, {0, 0, 3, 0x05}, {0, 1, 3, 0x09},
+    {0, 0, 2, 0x0a}, {0, 1, 2, 0x11}, {0, 0, 4, 0x31}, {0, 1, 7, 0x21},
 };
 
 int main(int argc, char **argv) {
@@ -53,9 +44,10 @@ int main(int argc, char **argv) {
   dut->trace(m_trace, 5);
   m_trace->open("waveform.vcd");
 
-  bool flag_use_board = false;
-  // flag_use_board = true;
-  if (flag_use_board) {
+  /* verification */
+
+  bool use_board = argc > 1 && strcmp(argv[1], "--use_board") == 0;
+  if (use_board) {
     /* board */
     nvboard_bind_all_pins(dut);
     nvboard_init();
@@ -63,16 +55,14 @@ int main(int argc, char **argv) {
     while (1) {
       nvboard_update();
       dut->eval();
-      printf("cycle\n");
     }
-
     nvboard_quit();
+    m_trace->close();
     delete dut;
     return 0;
   }
 
   vluint64_t sim_time = 0;
-
   for (const auto &test_pair : data_arr) {
     dut->LRw = test_pair.LRw;
     dut->ALw = test_pair.ALw;

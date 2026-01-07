@@ -7,7 +7,7 @@ module ex6(
     input reset,
     input [7:0] data_in,
     output [7:0] data_out,
-	output reg [6:0] seg0, seg1
+	output [6:0] seg0, seg1
 );
     get_8bit_rnd shift0 (
         .clk(clk),

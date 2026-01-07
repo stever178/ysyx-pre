@@ -3,8 +3,8 @@
 module ex2(
   input  [7:0] x,
   input  EN,
-  output reg [2:0] y,
-  output reg [6:0] seg,
+  output [2:0] y,
+  output [6:0] seg,
   output valid
 );
   prio_encode83 encoder (

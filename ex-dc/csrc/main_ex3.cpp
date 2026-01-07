@@ -1,15 +1,16 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Vex3.h"
 #include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
-#define MAX_SIM_TIME 1e6
-
 void nvboard_bind_all_pins(TOP_NAME *top);
+
+#define MAX_SIM_TIME 1e4
 
 /* 4位带符号位的 补码 ALU
   000: add
@@ -21,7 +22,18 @@ void nvboard_bind_all_pins(TOP_NAME *top);
   110: 比较大小
   111: 判断相等
   */
-struct alu_data {
+/*
+module ex3(
+        input [3:0] A,
+        input [3:0] B,
+        input [2:0] sel,
+        output out_o,
+        output out_c,
+        output [3:0] out_s,
+        output out_z
+);
+*/
+struct DUT_INPUT {
   int8_t A, B, sel;
   bool out_o, out_c, out_z; // 溢出，进位，为零
   int8_t out_s;
@@ -134,7 +146,7 @@ int8_t to_signed_4bit(int8_t val) {
   return val;
 }
 
-void print_test_case(const alu_data &test) {
+void print_test_case(const DUT_INPUT &test) {
   printf("A=%2d, B=%2d, sel=%d -> ", to_signed_4bit(test.A),
          to_signed_4bit(test.B), test.sel);
   printf("O=%d, C=%d, out_s=%2d, Z=%d\n", test.out_o, test.out_c,
@@ -148,14 +160,17 @@ int main(int argc, char **argv) {
 
   TOP_NAME *dut = new TOP_NAME();
 
+  vluint64_t sim_time = 0;
+
   /* C++ wave */
   VerilatedVcdC *m_trace = new VerilatedVcdC;
   dut->trace(m_trace, 5);
   m_trace->open("waveform.vcd");
 
-  bool flag_use_board = false;
-  // flag_use_board = true;
-  if (flag_use_board) {
+  /* verification */
+
+  bool use_board = argc > 1 && strcmp(argv[1], "--use_board") == 0;
+  if (use_board) {
     /* board */
     nvboard_bind_all_pins(dut);
     nvboard_init();
@@ -163,15 +178,13 @@ int main(int argc, char **argv) {
     while (1) {
       nvboard_update();
       dut->eval();
-      printf("cycle\n");
     }
-
     nvboard_quit();
+    m_trace->close();
     delete dut;
     return 0;
   }
 
-  vluint64_t sim_time = 0;
   for (const auto &test_pair : data_arr) {
     // {A, B, sel, out_o, out_c, out_z, out_s}
     printf("#%3ld expected: ", sim_time);

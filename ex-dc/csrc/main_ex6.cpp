@@ -1,19 +1,19 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Vex6.h"
 #include <nvboard.h>
 #include <verilated.h>
 #include <verilated_vcd_c.h>
 
+void nvboard_bind_all_pins(TOP_NAME *top);
+
 #define MAX_SIM_TIME 1e4
 
 /* todo */
-static bool flag_use_board = false;
 static bool flag_single_eval = !true;
-
-void nvboard_bind_all_pins(TOP_NAME *top);
 
 /*
 module light_seg_x (
@@ -43,7 +43,6 @@ module light_seg_x (
     });
 endmodule
 */
-
 // 7段数码管显示码表（对应0-15的十六进制数字）
 static const uint8_t seg_table[16] = {
     0x01, // 0: 7'b000_0001
@@ -63,6 +62,16 @@ static const uint8_t seg_table[16] = {
     0x30, // E: 7'b011_0000
     0x38  // F: 7'b011_1000
 };
+
+/*
+module ex6(
+    input clk,
+    input reset,
+    input [7:0] data_in,
+    output [7:0] data_out,
+	output [6:0] seg0, seg1
+);
+*/
 
 static void single_cycle(TOP_NAME *dut) {
   dut->clk = 0;
@@ -98,7 +107,8 @@ int main(int argc, char **argv) {
 
   TOP_NAME *dut = new TOP_NAME();
 
-  if (flag_use_board) {
+  bool use_board = argc > 1 && strcmp(argv[1], "--use_board") == 0;
+  if (use_board) {
     /* board */
     nvboard_bind_all_pins(dut);
     nvboard_init();
@@ -106,7 +116,6 @@ int main(int argc, char **argv) {
     while (1) {
       nvboard_update();
       dut->eval();
-      printf("cycle\n");
     }
 
     nvboard_quit();
@@ -126,9 +135,10 @@ int main(int argc, char **argv) {
   uint8_t digit0 = 0, digit1 = 0;
 
   //
-  dut->clk = 0;
   state = 0x01;
   dut->data_in = state;
+
+  dut->clk = 0;
   reset(dut, 1);
   printf("[%04lu] state: 0x%02x ; dut: 0x%02x\n", sim_time, state,
          dut->data_out);
