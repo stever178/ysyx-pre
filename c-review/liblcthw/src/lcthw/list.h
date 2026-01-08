@@ -1,6 +1,8 @@
 #ifndef lcthw_List_h
 #define lcthw_List_h
 
+#include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 struct ListNode;
@@ -15,6 +17,7 @@ typedef struct List {
   int count;
   ListNode *first;
   ListNode *last;
+  bool free_flag;
 } List;
 
 List *List_create();

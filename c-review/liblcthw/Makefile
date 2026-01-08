@@ -6,13 +6,22 @@ SOURCES = $(wildcard src/**/*.c src/*.c)
 OBJECTS = $(patsubst %.c, %.o, $(SOURCES))
 
 TEST_SRC = $(wildcard tests/*_tests.c)
-TESTS = $(patsubst %.c, %, $(TEST_SRC))
+TESTS = $(patsubst tests/%.c, build/%, $(TEST_SRC))
 
 TARGET = build/liblcthw.a
 SO_TARGET = $(patsubst %.a,%.so,$(TARGET))
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) tests
+all: $(TARGET) $(SO_TARGET) tests move_ccjson
+
+CCJSON = ./compile_commands.json
+move_ccjson:
+	@if [ -f "$(CCJSON)" ]; then \
+		echo "Moving $(CCJSON) to build/"; \
+		mv "$(CCJSON)" build/ 2>/dev/null || echo "No $(CCJSON) file to move"; \
+	else \
+		echo "No $(CCJSON) file to move"; \
+	fi
 
 dev: CFLAGS = -g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
@@ -21,31 +30,31 @@ $(TARGET): CFLAGS += -fPIC
 $(TARGET): build $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
-
+	
 $(SO_TARGET): $(TARGET) $(OBJECTS)
 	$(CC) -shared -o $@ $(OBJECTS)
 
 build:
 	@mkdir -p build
-	@mkdir -p bin
 
 # The Unit Tests
 LDLIBS = $(TARGET) $(LIBS)
-$(TESTS): tests/%_tests: tests/%_tests.c $(TARGET)
+$(TESTS): build/%_tests: tests/%_tests.c $(TARGET)
 	$(CC) $(CFLAGS) $< -o $@ $(LDLIBS)
 
-tests: $(TESTS)
-	@sh ./tests/runtests.sh
+TEST_LOG = "build/tests.log"
+tests: $(TESTS) move_ccjson
+	@TEST_LOG=$(TEST_LOG) sh ./tests/runtests.sh
 
 valgrind:
-	VALGRIND = "valgrind --log-file=/tmp/valgrind-%p.log" $(MAKE)
+	VALGRIND="valgrind --log-file=build/valgrind-%p.log" $(MAKE) tests
 
 # The Cleaner
 clean:
-	@rm -rf build $(OBJECTS) $(TESTS)
-	@rm -f tests/tests.log
-	@find . -name "*.gc*" -exec rm {} \;
-	@rm -rf `find . -name "*.dSYM" -print`
+	rm -f $(TEST_LOG)
+	rm -rf build $(OBJECTS) $(TESTS)
+	find . -name "*.gc*" -exec rm {} \;
+	rm -rf `find . -name "*.dSYM" -print`
 
 # The Install
 install: all
@@ -58,4 +67,4 @@ check:
 	@echo Files with potentially dangerous functions.
 	@egrep $(BADFUNCS) $(SOURCES) || true
 
-.PHONY: all build tests clean install check
+.PHONY: all build tests clean install check move_ccjson

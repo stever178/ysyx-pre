@@ -1,16 +1,13 @@
-echo "\n==== Running unit tests ====\n"
+TEST_LOG=${1:-"build/tests.log"}
 
-TEST_LOG="tests/tests.log"
-echo "" > $TEST_LOG
+echo "\nLogging to $TEST_LOG\n"
 
-for i in tests/*_tests; do
+echo "===== Running unit tests =====" | tee $TEST_LOG
+echo "valgrind commands : ${VALGRIND}" | tee -a $TEST_LOG
+
+for i in build/*_tests; do
 	echo "---- running $i "
     if test -f $i; then
-        if [ "$i" = "tests/list_algos_tests" ]; then
-            # continue;
-            echo;
-        fi
-
         if $VALGRIND ./$i 2>>$TEST_LOG; then
             echo $i PASS
         else

@@ -1,3 +1,5 @@
+// #undef NDEBUG
+
 #include <lcthw/dbg.h>
 #include <lcthw/list_algos.h>
 
@@ -9,11 +11,11 @@ inline void ListNode_swap(ListNode *a, ListNode *b) {
   b->value = temp;
 }
 
-int List_bubble_sort(List *list, List_compare cmp) {
+List *List_bubble_sort(List *list, List_compare cmp) {
   int sorted = 1;
 
   if (List_count(list) <= 1) {
-    return 0; // already sorted
+    return list; // already sorted
   }
 
   do {
@@ -28,7 +30,7 @@ int List_bubble_sort(List *list, List_compare cmp) {
     }
   } while (!sorted);
 
-  return 0;
+  return list;
 }
 
 inline List *Merge_sort_list(List *left, List *right, List_compare cmp) {
@@ -53,7 +55,19 @@ inline List *Merge_sort_list(List *left, List *right, List_compare cmp) {
     }
   }
 
+  assert(List_count(left) == 0);
+  assert(List_count(right) == 0);
+
   return result;
+}
+
+inline void print_list(List *list) {
+  debug("[");
+  LIST_FOREACH(list, first, next, cur) {
+    (void)cur;
+    debug("%s ", (char *)cur->value);
+  }
+  debug("]");
 }
 
 List *List_merge_sort(List *list, List_compare cmp) {
@@ -61,30 +75,52 @@ List *List_merge_sort(List *list, List_compare cmp) {
     return list;
   }
 
+  debug("List_create left");
   List *left = List_create();
+  debug("List_create right");
   List *right = List_create();
   int middle = List_count(list) / 2;
 
   LIST_FOREACH(list, first, next, cur) {
     if (middle > 0) {
       List_push(left, cur->value);
+      debug("[] List_push left: %s", (char *)cur->value);
     } else {
       List_push(right, cur->value);
+      debug("[] List_push right: %s", (char *)cur->value);
     }
 
     middle--;
   }
+  assert(List_count(left) + List_count(right) == List_count(list));
 
+  debug("List_create sort_left");
   List *sort_left = List_merge_sort(left, cmp);
+  debug("List_create sort_right");
   List *sort_right = List_merge_sort(right, cmp);
 
-  // use the ending condition, think about it
-  if (sort_left != left)
-    List_destroy(left);
-  if (sort_right != right)
-    List_destroy(right);
+  List *merged = Merge_sort_list(sort_left, sort_right, cmp);
+  assert(List_count(sort_left) == 0);
+  assert(List_count(sort_right) == 0);
 
-  return Merge_sort_list(sort_left, sort_right, cmp);
+  // use the ending condition, think about it
+  if (sort_left != left) {
+    debug("List_destroy sort_left");
+    List_destroy(sort_left);
+  }
+  if (sort_right != right) {
+    debug("List_destroy sort_right");
+    List_destroy(sort_right);
+  }
+
+  debug("List_destroy left");
+  print_list(left);
+  List_destroy(left);
+  debug("List_destroy right");
+  print_list(right);
+  List_destroy(right);
+
+  return merged;
 }
 
 List *List_merge_sort_bottom_up(List *list, List_compare cmp) {
@@ -116,6 +152,51 @@ List *List_merge_sort_bottom_up(List *list, List_compare cmp) {
     }
 
     size *= 2;
+  }
+
+  return result_list;
+}
+
+void Insert_sorted_list(List *list, void *value, List_compare cmp) {
+  if (list->count == 0) {
+    List_push(list, value);
+    return;
+  }
+
+  LIST_FOREACH(list, first, next, cur) {
+    if (cmp(value, cur->value) < 0) {
+      ListNode *node = calloc(1, sizeof(ListNode));
+      node->value = value;
+
+      ListNode *cur_prev = cur->prev;
+
+      if (cur_prev) {
+        cur_prev->next = node;
+      } else {
+        list->first = node;
+      }
+      node->prev = cur_prev;
+
+      node->next = cur;
+      cur->prev = node;
+
+      list->count++;
+      return;
+    }
+  }
+
+  List_push(list, value);
+}
+
+List *List_insert_sort(List *list, List_compare cmp) {
+  if (List_count(list) <= 1) {
+    return list;
+  }
+
+  List *result_list = List_create();
+
+  LIST_FOREACH(list, first, next, cur) {
+    Insert_sorted_list(result_list, cur->value, cmp);
   }
 
   return result_list;

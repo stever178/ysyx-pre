@@ -3,22 +3,42 @@
 
 List *List_create() {
   // using calloc, memory is set to zero
-  return calloc(1, sizeof(List));
+  List* result = calloc(1, sizeof(List));
+  result->count = 0;
+  result->first = NULL;
+  result->last = NULL;
+  // result->free_flag = false;
+  return result;
 }
 
 void List_destroy(List *list) {
+  // if (list->free_flag) {
+  //   return;
+  // }
+
   LIST_FOREACH(list, first, next, cur) {
     if (cur->prev) {
       free(cur->prev);
     }
   }
+  if (list->last) {
+    free(list->last);
+  }
 
-  free(list->last);
+  list->count = 0;
+  list->first = NULL;
+  list->last = NULL;
+  // list->free_flag = true;
   free(list);
 }
 
 void List_clear(List *list) {
-  LIST_FOREACH(list, first, next, cur) { free(cur->value); }
+  LIST_FOREACH(list, first, next, cur) {
+    if (cur->value) {
+      free(cur->value);
+      cur->value = NULL;
+    }
+  }
 }
 
 void List_clear_destroy(List *list) {
