@@ -12,7 +12,7 @@ TARGET = build/liblcthw.a
 SO_TARGET = $(patsubst %.a,%.so,$(TARGET))
 
 # The Target Build
-all: $(TARGET) $(SO_TARGET) tests move_ccjson
+all: $(TARGET) $(SO_TARGET) move_ccjson
 
 CCJSON = ./compile_commands.json
 move_ccjson:
@@ -56,6 +56,10 @@ clean:
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
 
+vclean: valgrind-clean
+valgrind-clean:
+	rm -f build/valgrind-*.log
+
 # The Install
 install: all
 	install -d $(DESTDIR)/$(PREFIX)/lib/
@@ -67,4 +71,4 @@ check:
 	@echo Files with potentially dangerous functions.
 	@egrep $(BADFUNCS) $(SOURCES) || true
 
-.PHONY: all build tests clean install check move_ccjson
+.PHONY: all build tests install check move_ccjson clean vclean valgrind-clean
