@@ -39,9 +39,13 @@ for cache_file in ${FILES_DIR}/*.out; do
     echo "  Source: ${src_file:-N/A (generic analysis)}"
     echo "  Output: $output_file"
     
-    callgrind_annotate --tree=both \
-        "$cache_file" "$src_file" > "$output_file" 2>/dev/null || \
-        echo "  ERROR: Analysis failed for $target" > "$output_file"
+    if [ -n "$src_file" ]; then
+        callgrind_annotate --tree=both \
+            "$call_file" "$src_file" > "$output_file"
+    else
+        callgrind_annotate --tree=both \
+            "$call_file" > "$output_file"
+    fi
 
     echo "  ✓ Analysis saved to $output_file"
     echo ""
@@ -49,3 +53,4 @@ done
 
 echo "=== Cachegrind Analysis Complete ==="
 echo "Results saved to build/analysis_cachegrind_*.txt"
+echo ""

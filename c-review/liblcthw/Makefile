@@ -63,33 +63,34 @@ cachegrind: $(TESTS)
 		--log-file=build/cachegrind/todo.log \
 		--cachegrind-out-file=build/cachegrind/todo.out" \
 		$(MAKE) tests
-	@echo "=== All Cachegrind Analysis Complete ==="
+	@echo "=== All Cachegrind Analysis Complete ===\n"
 
+.ONESHELL:
 callgrind: $(TESTS)
 	@mkdir -p build/callgrind
 	export VALGRIND="valgrind --tool=callgrind \
 		--log-file=build/callgrind/todo.log \
-		--callgrind-out-file=build/callgrind/todo.out" \
+		--callgrind-out-file=build/callgrind/todo.out" ;\
 		$(MAKE) tests
-	@echo "=== All Callgrind Analysis Complete ==="
+	echo "=== All Callgrind Analysis Complete ===\n"
 
-analyze-cache: cachegrind
+analyze-cache:
 	@echo "=== Running Cachegrind Analysis ==="
 	@sh ./tests/analyze_cache.sh
 
-analyze-call: callgrind
+analyze-call:
 	@echo "=== Running Callgrind Analysis ==="
 	@sh ./tests/analyze_call.sh
 
 analyze: analyze-cache analyze-call
-	@echo "=== All Analysis Complete ==="
+	@echo "=== All Analysis Complete ===\n"
 
-list-analysis:
+list-analyze:
 	@echo "Available analysis targets:"
 	@for target in $(ANALYSIS_TARGETS); do \
 	    echo "  analyze_$$target"; \
 	done
-	@echo "Or use: make analyze  # for all files"
+	@echo "Or use: make analyze"
 
 # The Cleaner
 clean:
@@ -98,14 +99,14 @@ clean:
 	find . -name "*.gc*" -exec rm {} \;
 	rm -rf `find . -name "*.dSYM" -print`
 
-vclean: valgrind-clean
-valgrind-clean:
-	rm -f build/valgrind-*.log
-	rm -f build/cachegrind*
-	rm -f build/callgrind*
+clean-valgrind:
+	rm -f build/valgrind-*
+	rm -rf build/cachegrind
+	rm -rf build/callgrind
 
-clean-analysis:
-	rm -f build/*.log.* build/*.out.*
+clean-analyze:
+	rm -rf build/analysis_cachegrind
+	rm -rf build/analysis_callgrind
 
 # The Install
 install: all
@@ -122,7 +123,8 @@ debug-make:
 	@echo "MAKE variable is: '$(MAKE)'"
 	@echo "Length: $(words $(MAKE)) words"
 
-.PHONY: all build install check debug-make clean move_ccjson \
-	valgrind vclean valgrind-clean \
-	cachegrind callgrind analyze clean-analysis list-analysis \
+.PHONY: all build move_ccjson install check debug-make clean \
+	valgrind clean-valgrind \
+	cachegrind callgrind analyze-cache analyze-call analyze \
+	clean-analyze list-analyze \
 	build-tests run-tests tests

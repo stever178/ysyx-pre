@@ -94,6 +94,9 @@ char *test_random_write_read() {
   log_info("\n== Random write/read test...");
 
   int upper = 1 << 10;
+  char *str1 = gen_random_string(len1 * upper);
+  char *str2 = gen_random_string(len1 * upper);
+
   for (int factor = 1; factor < upper; factor *= 2) {
     int buffer_size = PAGE_SIZE * factor;
     ringbuffer = RingBuffer_create(buffer_size);
@@ -101,8 +104,6 @@ char *test_random_write_read() {
 
     len1 *= 2;
     len2 *= 2;
-    char *str1 = gen_random_string(len1);
-    char *str2 = gen_random_string(len1);
 
     char *result;
     clock_t start, end;
@@ -146,11 +147,11 @@ char *test_random_write_read() {
                buffer_size, time_record);
     }
 
-    free_string(str1);
-    free_string(str2);
-
     RingBuffer_destroy(ringbuffer);
   }
+
+  free_string(str1);
+  free_string(str2);
 
   return NULL;
 }

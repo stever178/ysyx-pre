@@ -22,3 +22,5 @@ for i in build/*_tests; do
     fi
     echo ""
 done
+
+echo ""
