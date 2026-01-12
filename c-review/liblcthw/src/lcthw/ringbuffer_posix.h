@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,8 +16,9 @@ size_t get_page_size();
 typedef struct {
   void *virt_buf1; // 第一个映射区域
   void *virt_buf2; // 第二个映射区域（紧接着第一个）
-  int fd;          // 用于 mmap 的文件描述符
-  int use_shm;
+  bool is_continuous;
+  int fd; // 用于 mmap 的文件描述符
+  bool use_shm;
   char *shm_name;
   size_t size;     // 缓冲区大小（必须是页大小的倍数）
   char *write_ptr; // 写指针（始终在第一个映射区域内）

@@ -1,7 +1,12 @@
+// #define NDARRY_
+
 #include "minunit.h"
-#include <assert.h>
-// #include <lcthw/stack.h>
+
+#ifdef NDARRY_
+#include <lcthw/stack.h>
+#else
 #include <lcthw/stack_darray.h>
+#endif
 
 static Stack *stack = NULL;
 char *tests[] = {"test1 data", "test2 data", "test3 data"};

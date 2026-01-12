@@ -1,6 +1,5 @@
 #include "minunit.h"
 #include <lcthw/queue.h>
-#include <assert.h>
 
 static Queue *queue = NULL;
 char *tests[] = {"test1 data", "test2 data", "test3 data"};

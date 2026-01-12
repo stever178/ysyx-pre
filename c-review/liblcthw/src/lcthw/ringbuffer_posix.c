@@ -32,13 +32,13 @@ RingBuffer *RingBuffer_create_posix(int length) {
   buffer->size = align_to_page_size(length);
 
   // 2. get fd
-  char shm_name[100] = "/ringbuffer_XXXXXX";
+  char shm_name[100] = "ringbuffer_XXXXXX";
   for (int i = 17; i < 23; i++) {
     shm_name[i] = 'A' + rand() % 26;
   }
   shm_name[23] = '\0';
   int fd = shm_open(shm_name, O_CREAT | O_RDWR | O_EXCL, 0600);
-  
+
   if (fd < 0) {
     buffer->use_shm = 0;
     buffer->shm_name = NULL;
@@ -50,20 +50,20 @@ RingBuffer *RingBuffer_create_posix(int length) {
       char tmp_name[] = "/tmp/ringbuffer_XXXXXX";
       fd = mkstemp(tmp_name);
       unlink(tmp_name);
-      printf("== Using mkstemp to get fd for mmap.\n");
+      log_info("== Using mkstemp to get fd for mmap.");
 
     } else {
-      printf("== Using memfd_create to get fd for mmap.\n");
+      log_info("== Using memfd_create to get fd for mmap.");
     }
   } else {
-    printf("== Using shm_open to get fd for mmap.\n");
+    log_info("== Using shm_open to get fd for mmap.");
     buffer->use_shm = 1;
     buffer->shm_name = malloc(sizeof(shm_name));
     memcpy(buffer->shm_name, shm_name, sizeof(shm_name));
   }
 
   if (fd < 0) {
-    printf("Cannot get a fd for mmap.\n");
+    log_err("Cannot get a fd for mmap.");
     free(buffer);
     return NULL;
   }
@@ -82,7 +82,7 @@ RingBuffer *RingBuffer_create_posix(int length) {
   void *reserved_addr = mmap(NULL, total_size,
                              PROT_NONE, // 无权限，只预留地址
                              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  printf("reserved address: %p\n", reserved_addr);
+  log_info("Reserved address: %p .", reserved_addr);
 
   // 4. 解除预留（但不释放地址空间）
   munmap(reserved_addr, total_size);
@@ -105,8 +105,12 @@ RingBuffer *RingBuffer_create_posix(int length) {
 
   // 如果指定地址不可用，让内核选择
   if (buffer->virt_buf2 == MAP_FAILED) {
+    buffer->is_continuous = false;
     buffer->virt_buf2 = mmap(NULL, buffer->size, PROT_READ | PROT_WRITE,
                              MAP_SHARED, buffer->fd, 0);
+  } else {
+    assert(buffer->virt_buf2 == desired_addr);
+    buffer->is_continuous = true;
   }
 
   if (buffer->virt_buf2 == MAP_FAILED) {
@@ -128,19 +132,16 @@ RingBuffer *RingBuffer_create_posix(int length) {
 // 调整指针到第一个映射区域
 static void adjust_pointers_posix(RingBuffer *buffer) {
   char *buf_start = (char *)buffer->virt_buf1;
-  char *buf_end = buf_start + buffer->size;
-
-  // 检查指针是否在第一个映射区域内
-  if (buffer->read_ptr >= buf_end) {
-    // 计算在第一个区域内的偏移
-    size_t offset = buffer->read_ptr - buf_start;
-    buffer->read_ptr = buf_start + (offset % buffer->size);
+  if (buffer->write_ptr == buffer->read_ptr) {
+    buffer->write_ptr = buffer->read_ptr = buf_start;
+    return;
   }
 
-  if (buffer->write_ptr >= buf_end) {
-    size_t offset = buffer->write_ptr - buf_start;
-    buffer->write_ptr = buf_start + (offset % buffer->size);
-  }
+  size_t read_offset = buffer->read_ptr + buffer->size - buf_start;
+  buffer->read_ptr = buf_start + (read_offset % buffer->size);
+
+  size_t write_offset = buffer->write_ptr + buffer->size - buf_start;
+  buffer->write_ptr = buf_start + (write_offset % buffer->size);
 }
 
 // 获取可读数据量
@@ -157,78 +158,99 @@ int RingBuffer_available_data_posix(RingBuffer *buffer) {
 
 // 获取可用空间
 int RingBuffer_available_space_posix(RingBuffer *buffer) {
-  adjust_pointers_posix(buffer);
   return buffer->size - RingBuffer_available_data_posix(buffer);
 }
 
-static void continuous_read(RingBuffer *buffer, char *target, int amount) {
-  // 由于双映射，我们可以直接从当前位置读取，即使跨越边界
-  char *current = buffer->read_ptr;
-
-  char *max_read = (char *)buffer->virt_buf1 + buffer->size;
-  if (current + amount > max_read) {
-    size_t first_part = max_read - current;
-    memcpy(target, current, first_part);
-    memcpy(target + first_part, (char *)buffer->virt_buf1, amount - first_part);
-  } else {
-    memcpy(target, current, amount);
-  }
-
-  buffer->read_ptr += amount;
-}
-
-int RingBuffer_read_posix(RingBuffer *buffer, char *target, int amount) {
-  adjust_pointers_posix(buffer);
-
-  if (amount == 0)
-    return 0;
-
-  int available_data = RingBuffer_available_data_posix(buffer);
-  if (amount > available_data) {
-    printf("Not enough in the buffer: has %d, needs %d, still read\n",
-           available_data, amount);
-  }
-
-  continuous_read(buffer, target, amount);
-  adjust_pointers_posix(buffer);
-
-  return amount;
-}
-
-static void continuous_write(RingBuffer *buffer, char *data, int length) {
+static int continuous_write(RingBuffer *buffer, char *data, int length) {
   char *current = buffer->write_ptr;
-  char *max_write = (char *)buffer->virt_buf1 + buffer->size;
 
-  if (current + length > max_write) {
-    // 分两次拷贝以确保安全
-    size_t first_part = max_write - current;
-    memcpy(current, data, first_part);
-    memcpy((char *)buffer->virt_buf1, data + first_part, length - first_part);
-  } else {
+  if (buffer->is_continuous) {
     memcpy(current, data, length);
+  } else {
+    // 分两次拷贝
+    void *result;
+
+    char *max_write = (char *)buffer->virt_buf1 + buffer->size;
+    if (current + length > max_write) {
+      size_t first_part = max_write - current;
+      result = memcpy(current, data, first_part);
+      result = memcpy((char *)buffer->virt_buf1, data + first_part,
+                      length - first_part);
+    } else {
+      result = memcpy(current, data, length);
+    }
+    check(result != NULL, "Failed to write data into buffer.");
   }
 
   buffer->write_ptr += length;
+  return length;
+
+error:
+  return -1;
 }
 
-// 写入数据
 int RingBuffer_write_posix(RingBuffer *buffer, char *data, int length) {
-  adjust_pointers_posix(buffer);
-
-  if (length == 0)
-    return 0;
+  check(length > 0, "\n\tCannot write %d bytes.", length);
 
   int available_space = RingBuffer_available_space_posix(buffer);
-  if (length > available_space) {
-    printf("Not enough space in the buffer: %d request, %d available, so cover "
-           "the old area.\n",
-           length, available_space);
-  }
+  check(length <= available_space,
+        "\n\t[Refuse to write]: %d request, %d available.", length,
+        available_space);
 
-  continuous_write(buffer, data, length);
+  int actual_write = continuous_write(buffer, data, length);
+  check(actual_write != 1, "Failed to write data into buffer.");
   adjust_pointers_posix(buffer);
 
-  return length;
+  return actual_write;
+
+error:
+  return 0;
+}
+
+static int continuous_read(RingBuffer *buffer, char *target, int amount) {
+  char *current = buffer->read_ptr;
+
+  if (buffer->is_continuous) {
+    memcpy(target, current, amount);
+  } else {
+    // 分两次拷贝
+    void *result;
+
+    char *max_read = (char *)buffer->virt_buf1 + buffer->size;
+    if (current + amount > max_read) {
+      size_t first_part = max_read - current;
+      result = memcpy(target, current, first_part);
+      result = memcpy(target + first_part, (char *)buffer->virt_buf1,
+                      amount - first_part);
+    } else {
+      result = memcpy(target, current, amount);
+    }
+    check(result != NULL, "Failed to read data from buffer.");
+  }
+
+  buffer->read_ptr += amount;
+  return amount;
+
+error:
+  return -1;
+}
+
+int RingBuffer_read_posix(RingBuffer *buffer, char *target, int amount) {
+  check(amount > 0, "\n\tCannot read %d bytes.", amount);
+
+  int available_data = RingBuffer_available_data_posix(buffer);
+  check(amount <= available_data,
+        "\n\t[Refuse to read]: %d available, %d request.", available_data,
+        amount);
+
+  int actual_read = continuous_read(buffer, target, amount);
+  check(actual_read != -1, "Failed to read data from buffer.");
+  adjust_pointers_posix(buffer);
+
+  return actual_read;
+
+error:
+  return 0;
 }
 
 // 清理资源
@@ -250,48 +272,48 @@ void RingBuffer_destroy_posix(RingBuffer *buffer) {
 
   if (buffer->use_shm) {
     assert(buffer->shm_name != NULL);
+    log_info("== Using shm_unlink for /dev/shm/%s .", buffer->shm_name);
     shm_unlink(buffer->shm_name);
-    printf("== Using shm_unlink for /dev/shm/%s.\n", buffer->shm_name);
     free(buffer->shm_name);
   }
 
   free(buffer);
-  printf("Destroy ringbuffer over.\n");
+  log_info("Destroy ringbuffer over.");
 }
 
 // 获取内部信息（用于调试）
 void RingBuffer_debug_posix(RingBuffer *buffer) {
-  printf("========\n");
+  log_info("========");
   if (!buffer) {
-    printf("Buffer is NULL, now return.\n");
+    debug("Buffer is NULL, now return.");
     return;
   }
 
-  printf("RingBuffer Debug Info:\n");
-  printf("  Size: %zu bytes\n", buffer->size);
+  log_info("RingBuffer Debug Info:");
+  log_info("  Size: %zu bytes", buffer->size);
 
-  printf("  Virt_buf1: %p\n", buffer->virt_buf1);
-  printf("  Virt_buf2: %p (offset: %+ld)\n", buffer->virt_buf2,
-         (char *)buffer->virt_buf2 - (char *)buffer->virt_buf1);
-  printf("  Write ptr: %p (offset: %+ld)\n", buffer->write_ptr,
-         buffer->write_ptr - (char *)buffer->virt_buf1);
-  printf("  Read  ptr: %p (offset: %+ld)\n", buffer->read_ptr,
-         buffer->read_ptr - (char *)buffer->virt_buf1);
+  log_info("  Virt_buf1: %p", buffer->virt_buf1);
+  log_info("  Virt_buf2: %p (offset: %+ld)", buffer->virt_buf2,
+           (char *)buffer->virt_buf2 - (char *)buffer->virt_buf1);
+  log_info("  Write ptr: %p (offset: %+ld)", buffer->write_ptr,
+           buffer->write_ptr - (char *)buffer->virt_buf1);
+  log_info("  Read  ptr: %p (offset: %+ld)", buffer->read_ptr,
+           buffer->read_ptr - (char *)buffer->virt_buf1);
 
-  printf("  Available data : %d bytes\n",
-         RingBuffer_available_data_posix(buffer));
-  printf("  Available space: %d bytes\n",
-         RingBuffer_available_space_posix(buffer));
+  log_info("  Available data : %d bytes",
+           RingBuffer_available_data_posix(buffer));
+  log_info("  Available space: %d bytes",
+           RingBuffer_available_space_posix(buffer));
 
   // 简单的双映射验证
-  if ((char *)buffer->virt_buf2 > (char *)buffer->virt_buf1) {
-    printf("  Verification: Second mapping is after first\n");
-  }
+  // if ((char *)buffer->virt_buf2 > (char *)buffer->virt_buf1) {
+  //   log_info("  Verification: Second mapping is after first");
+  // }
 
   // 验证双映射是否工作
-  char *test_addr = (char *)buffer->virt_buf1 + buffer->size - 1;
-  printf("  Verification:\n");
-  printf("    Addr at end   of region1: %p\n", test_addr);
-  printf("    Addr at start of region2: %p\n", buffer->virt_buf2);
-  // printf("    They should point to same physical page\n");
+  // char *test_addr = (char *)buffer->virt_buf1 + buffer->size;
+  // log_info("  Verification:");
+  // log_info("    Addr at end   of region1: %p", test_addr);
+  // log_info("    Addr at start of region2: %p", buffer->virt_buf2);
+  // log_info("    They should point to same physical page");
 }

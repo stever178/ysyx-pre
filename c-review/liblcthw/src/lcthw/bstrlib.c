@@ -1751,7 +1751,7 @@ bstring auxr = (bstring) repl;
 			int *t;
 			int sl;
 			/* Overflow */
-			if (mlen > (INT_MAX / sizeof(int *)) / 2) {
+			if ((long unsigned int)mlen > (INT_MAX / sizeof(int *)) / 2) {
 				ret = BSTR_ERR;
 				goto done;
 			}

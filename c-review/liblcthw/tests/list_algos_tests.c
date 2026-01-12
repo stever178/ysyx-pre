@@ -1,11 +1,6 @@
 #include "minunit.h"
 #include <lcthw/list_algos.h>
 
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
 #define NUM_VALUES 15
 const int epochs = 1e3;
 
@@ -150,7 +145,7 @@ char *run_single_sort_test(List_sort sort_func, double *time_record) {
 
     List_destroy(words);
 
-    (*time_record) += ((double)(end - start)) / CLOCKS_PER_SEC;
+    (*time_record) = ((double)(end - start)) / CLOCKS_PER_SEC;
   }
 
   return NULL;

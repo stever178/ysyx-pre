@@ -34,13 +34,20 @@ int RingBuffer_write(RingBuffer *buffer, char *data, int length) {
     buffer->start = buffer->end = 0;
   }
 
-  // 规定每次写数据都不能超过数组末尾
-  // -> 写到末尾后不能再写，必须等到读到末尾，然后更新start, end
+  check(length > 0, "\n\tNeed more than 0 for write, you gave: %d ", length);
   check(length <= RingBuffer_available_space(buffer),
-        "Not enough space: %d request, %d available",
-        length, RingBuffer_available_space(buffer));
+        "\n\tNot enough space: %d request, %d available", length,
+        RingBuffer_available_space(buffer));
 
-  void *result = memcpy(RingBuffer_ends_at(buffer), data, length);
+  void *result;
+  int max_write = buffer->length - buffer->end;
+  if (length > max_write) {
+    size_t first_part = max_write;
+    result = memcpy(RingBuffer_ends_at(buffer), data, first_part);
+    result = memcpy(buffer->buffer, data + first_part, length - first_part);
+  } else {
+    result = memcpy(RingBuffer_ends_at(buffer), data, length);
+  }
   check(result != NULL, "Failed to write data into buffer.");
 
   RingBuffer_commit_write(buffer, length);
@@ -48,15 +55,24 @@ int RingBuffer_write(RingBuffer *buffer, char *data, int length) {
   return length;
 
 error:
-  return -1;
+  return 0;
 }
 
 int RingBuffer_read(RingBuffer *buffer, char *target, int amount) {
-  check_debug(amount <= RingBuffer_available_data(buffer),
-              "Not enough in the buffer: has %d, needs %d",
-              RingBuffer_available_data(buffer), amount);
+  check(amount > 0, "\n\tNeed more than 0 for read, you gave: %d ", amount);
+  check(amount <= RingBuffer_available_data(buffer),
+        "\n\tNot enough in the buffer: has %d, needs %d",
+        RingBuffer_available_data(buffer), amount);
 
-  void *result = memcpy(target, RingBuffer_starts_at(buffer), amount);
+  void *result;
+  int max_read = buffer->length - buffer->start;
+  if (amount > max_read) {
+    size_t first_part = max_read;
+    result = memcpy(target, RingBuffer_starts_at(buffer), first_part);
+    result = memcpy(target + first_part, buffer->buffer, amount - first_part);
+  } else {
+    result = memcpy(target, RingBuffer_starts_at(buffer), amount);
+  }
   check(result != NULL, "Failed to write buffer into data.");
 
   RingBuffer_commit_read(buffer, amount);
@@ -68,13 +84,13 @@ int RingBuffer_read(RingBuffer *buffer, char *target, int amount) {
   return amount;
 
 error:
-  return -1;
+  return 0;
 }
 
 bstring RingBuffer_gets(RingBuffer *buffer, int amount) {
-  check(amount > 0, "Need more than 0 for gets, you gave: %d ", amount);
+  check(amount > 0, "\n\tNeed more than 0 for gets, you gave: %d ", amount);
   check_debug(amount <= RingBuffer_available_data(buffer),
-              "Not enough in the buffer.");
+              "\n\tNot enough in the buffer.");
 
   bstring result = blk2bstr(RingBuffer_starts_at(buffer), amount);
   check(result != NULL, "Failed to create gets result.");
