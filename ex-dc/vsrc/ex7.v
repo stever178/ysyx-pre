@@ -12,7 +12,8 @@ module ex7(
     input clrn,
     input kbd_clk,
     input kbd_data,
-    output ready, overflow, sampling,
+    output ready, nextdata_n,
+    output overflow, sampling,
     output [7:0] ps2_out,
     output [7:0] ascii_out,
     output reg [6:0] seg_count1, seg_count0, 
@@ -20,30 +21,6 @@ module ex7(
     output reg [6:0] seg_scan_code1, seg_scan_code0,
     output reg [6:0] seg_empty1, seg_empty0
 );
-    parameter [7:0] break_code = 8'hF0;
-
-    // wire [7:0] ps2_out;
-    reg [7:0] scan_code;
-    // reg [7:0] ascii_out;
-
-    reg [7:0] count_out;
-
-    reg nextdata_n;
-    always @(posedge clk) begin
-        if (clrn == 0)
-            nextdata_n <= 1'b0;
-        else begin
-            // if (nextdata_n == 1'b0)
-            //     nextdata_n <= 1'b1;
-            // else begin
-                if (ready)
-                    nextdata_n <= 1'b0;
-                else
-                    nextdata_n <= 1'b1;
-            // end
-        end
-    end
-
     // 接收键盘数据
     ps2_keyboard inst_ps2(
         .clk(clk),
@@ -57,7 +34,16 @@ module ex7(
         .overflow(overflow)
     );
 
-    // 处理键盘数据
+    update_nextdata_n inst_update(
+        .clk(clk), 
+        .clrn(clrn),
+        .ready(ready),
+        .nextdata_n(nextdata_n)
+    );
+
+    // 读取键盘数据
+    reg [7:0] scan_code;
+
     always @(posedge clk) begin
         if (ready) begin
             scan_code <= ps2_out;
@@ -73,25 +59,55 @@ module ex7(
     );
 
     // 计算按键总次数, 按住不放只算一次
+    reg [7:0] count_out;
+    reg pressed;
 
-    // always @(posedge clk) begin 
-    //     if (clrn == 0) begin
-    //         count_out <= 8'h00;
-    //     end else begin
-    //         if (scan_code == break_code)
-    //             count_out <= count_out + 8'h01;
-    //         else
-    //             count_out <= count_out;
-    //     end
-    // end
+    get_count inst_count(
+        .clk(clk),
+        .clrn(clrn),
+        .ready(ready),
+        .scan_code(scan_code),
+        .count_out(count_out),
+        .pressed(pressed)
+    );
 
+    // 数码管显示
+    display_ex7 inst_display(
+        .pressed(pressed),
+        .scan_code(scan_code),
+        .ascii_out(ascii_out),
+        .count_out(count_out),
+        .seg_count1(seg_count1),
+        .seg_count0(seg_count0),
+        .seg_ascii1(seg_ascii1),
+        .seg_ascii0(seg_ascii0),
+        .seg_scan_code1(seg_scan_code1),
+        .seg_scan_code0(seg_scan_code0)
+    );
+
+    assign seg_empty0 = 7'b111_1111;
+    assign seg_empty1 = 7'b111_1111;
+endmodule
+
+module get_count(
+    input clk,
+    input clrn,
+    input ready, 
+    input [7:0] scan_code,
+    output reg [7:0] count_out,
+    output pressed 
+);
+    parameter [7:0] BREAK_CODE = 8'hF0;
+
+    // 计算按键总次数, 按住不放只算一次
     reg in_break_seq; // 标记是否处于break序列中
+
     always @(posedge clk) begin
-        if (clrn == 0) begin
+        if (clrn == 1'b0) begin
             in_break_seq <= 1'b0;
             count_out <= 8'h00;
         end else begin
-            if (scan_code == break_code) begin
+            if (scan_code == BREAK_CODE) begin
                 in_break_seq <= 1'b1; // 开始break序列
             end else if (in_break_seq) begin
                 in_break_seq <= 1'b0; // 结束break序列，计数加1
@@ -99,43 +115,52 @@ module ex7(
             end
         end
     end
-    	
-    // 按键的数码管显示
-    light_seg_x show_scan_code0 (
-        .digit(scan_code[3:0]),
-        .ready(1'b1),
-        .seg(seg_scan_code0)
-    );
-    light_seg_x show_scan_code1 (
-        .digit(scan_code[7:4]),
-        .ready(1'b1),
-        .seg(seg_scan_code1)
-    );
 
-    light_seg_x show_ascii0 (
-        .digit(ascii_out[3:0]),
-        .ready(1'b1),
-        .seg(seg_ascii0)
-    );
-    light_seg_x show_ascii1 (
-        .digit(ascii_out[7:4]),
-        .ready(1'b1),
-        .seg(seg_ascii1)
-    );
+    // 按下与否
+    parameter [1:0] IDLE = 2'd0, PRESS = 2'd1, RELEASE_0 = 2'd2, RELEASE_1 = 2'd3;
+    reg [1:0] state, next_state;
 
-    light_seg_x show_count0 (
-        .digit(count_out[3:0]),
-        .ready(1'b1),
-        .seg(seg_count0)
-    );
-    light_seg_x show_count1 (
-        .digit(count_out[7:4]),
-        .ready(1'b1),
-        .seg(seg_count1)
-    );
+    always @(*) begin 
+        case (state)
+            IDLE: begin
+                if (ready) begin
+                    if (scan_code != BREAK_CODE)
+                        next_state = PRESS;
+                    else
+                        next_state = IDLE;
+                end
+                else
+                    next_state = IDLE;
+            end
+            PRESS: begin
+                if (scan_code != BREAK_CODE)
+                    next_state = PRESS;
+                else
+                    next_state = RELEASE_0;
+            end
+            RELEASE_0: begin
+                if (scan_code != BREAK_CODE)
+                    next_state = RELEASE_1;
+                else
+                    next_state = RELEASE_0;
+            end
+            RELEASE_1: begin
+                if (ready)
+                    next_state = IDLE;
+                else
+                    next_state = RELEASE_1;
+            end
+        endcase
+    end
 
-    assign seg_empty0 = 7'b111_1111;
-    assign seg_empty1 = 7'b111_1111;
+    always @(posedge clk) begin
+        if (clrn == 0)
+            state <= IDLE;
+        else
+            state <= next_state;
+    end
+
+    assign pressed = (state == PRESS);
 endmodule
 
 // IBM PC AT
@@ -188,7 +213,6 @@ module get_ascii_2(
         8'h4E, 8'h2D,
         8'h55, 8'h3D
     });
-
 endmodule
 
 // IBM PC XT
@@ -255,6 +279,54 @@ module get_ascii_1(
     });
 endmodule
 
+module display_ex7(
+    input pressed,
+    input [7:0] scan_code,
+    input [7:0] ascii_out,
+    input [7:0] count_out,
+    output [6:0] seg_count1, seg_count0, 
+    output [6:0] seg_ascii1, seg_ascii0,
+    output [6:0] seg_scan_code1, seg_scan_code0
+);
+    // 当按键松开时，七段数码管的低四位全灭
+
+    // 低两位
+    light_seg_x show_scan_code0 (
+        .digit(scan_code[3:0]),
+        .ready(pressed),
+        .seg(seg_scan_code0)
+    );
+    light_seg_x show_scan_code1 (
+        .digit(scan_code[7:4]),
+        .ready(pressed),
+        .seg(seg_scan_code1)
+    );
+
+    // 中间两位
+    light_seg_x show_ascii0 (
+        .digit(ascii_out[3:0]),
+        .ready(pressed),
+        .seg(seg_ascii0)
+    );
+    light_seg_x show_ascii1 (
+        .digit(ascii_out[7:4]),
+        .ready(pressed),
+        .seg(seg_ascii1)
+    );
+
+    // 高两位
+    light_seg_x show_count0 (
+        .digit(count_out[3:0]),
+        .ready(1'b1),
+        .seg(seg_count0)
+    );
+    light_seg_x show_count1 (
+        .digit(count_out[7:4]),
+        .ready(1'b1),
+        .seg(seg_count1)
+    );
+endmodule
+
 module light_seg_x (
     input [3:0] digit,
     input ready,
@@ -281,6 +353,69 @@ module light_seg_x (
         5'h1e, 7'b011_0000,
         5'h1f, 7'b011_1000
     });
+endmodule
+
+module update_nextdata_n(
+    input clk, clrn,
+    input ready,
+    output reg nextdata_n
+);
+    // 读取完毕后将nextdata_n置零 一个周期
+    // reg nextdata_n;
+    // always @(posedge clk) begin
+    //     if (clrn == 0)
+    //         nextdata_n <= 1'b1;
+    //     else begin
+    //         // if (nextdata_n == 1'b0)
+    //         //     nextdata_n <= 1'b1;
+    //         // else begin
+    //             if (ready)
+    //                 nextdata_n <= 1'b0;
+    //             else
+    //                 nextdata_n <= 1'b1;
+    //         // end
+    //     end
+    // end
+
+    localparam IDLE = 1'b0, REQ = 1'b1;
+    reg state, next_state;
+
+    always @(*) begin
+        case (state) 
+            IDLE: begin
+                if (ready)
+                    next_state = REQ;
+                else
+                    next_state = IDLE;
+            end
+            REQ: begin
+                next_state = IDLE;
+            end
+        endcase
+    end
+
+    always @(posedge clk) begin
+        if (clrn == 0) begin
+            state <= IDLE;
+        end else begin
+            state <= next_state;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (clrn == 0) begin
+            nextdata_n <= 1'b1;
+        end else begin
+            case (state)
+                IDLE: begin
+                    nextdata_n <= 1'b1;
+                end
+                REQ: begin
+                    nextdata_n <= 1'b0;
+                end
+            endcase
+        end
+    end
 endmodule
 
 // 键盘控制器模块
@@ -316,8 +451,7 @@ module ps2_keyboard(
         end
         else begin
             if ( ready ) begin // read to output next data
-                if(nextdata_n == 1'b0) //read next data
-                begin
+                if(nextdata_n == 1'b0) begin //read next data
                     r_ptr <= r_ptr + 3'b1;
                     if(w_ptr == (r_ptr + 1'b1)) //empty
                         ready <= 1'b0;

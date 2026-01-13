@@ -1,9 +1,11 @@
 CFLAGS = -g -Wall -O0
 # CFLAGS += -Werror=shift-count-overflow
 CFLAGS += -Werror=div-by-zero
-# CFLAGS += -fsanitize=address
+CFLAGS += -fsanitize=address,leak
+CFLAGS += -fno-omit-frame-pointer
 
-LFLAGS ?=
+# LDFLAGS += -Wl,-Bstatic -lreadline -Wl,-Bdynamic -fsanitize=address
+LDFLAGS += -lreadline
 
 BUILD_DIR = ./build
 
@@ -21,7 +23,7 @@ $(info "========")
 $(BUILD_DIR)/%.out: ./%.c
 	@echo "Building $* ..."
 	@mkdir -p $(BUILD_DIR)
-	@gcc $(CFLAGS) $< -o $@
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 
 $(BIN_TARGETS): build-%: $(BUILD_DIR)/%.out
 

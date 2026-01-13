@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
   vluint64_t sim_time = 0;
   // while (!contextp->gotFinish()) {
   // while (sim_time <= MAX_SIM_TIME) {
-  while (1) {
+  for (;;) {
     nvboard_update();
 
     // dut->X0 = X0;

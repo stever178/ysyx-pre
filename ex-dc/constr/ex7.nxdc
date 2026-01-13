@@ -6,7 +6,9 @@ kbd_clk PS2_CLK
 kbd_data PS2_DAT
 
 
-ready LD2
+ready LD3
+nextdata_n LD2
+
 overflow LD1
 sampling LD0
 

@@ -1,8 +1,8 @@
-#include <assert.h>
+#include <cassert>
 #include <map>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "Vex7.h"
 #include <nvboard.h>
@@ -12,6 +12,10 @@
 void nvboard_bind_all_pins(TOP_NAME *top);
 
 #define MAX_SIM_TIME 1e7
+
+using namespace std;
+
+static const uint8_t BREAK_CODE = 0xF0;
 
 // IBM PC AT
 std::map<unsigned char, unsigned char> scancode_to_ascii_map = {
@@ -83,7 +87,8 @@ module ex7(
     input clrn,
     input kbd_clk,
     input kbd_data,
-    output ready, overflow, sampling,
+    output ready, nextdata_n,
+    output overflow, sampling,
     output [7:0] ps2_out,
     output [7:0] ascii_out,
     output reg [6:0] seg_count1, seg_count0,
@@ -98,12 +103,9 @@ struct DUT_INPUT {
 } data_arr[] = {{}};
 
 struct DUT_OUTPUT {
-  bool ready, overflow, sampling;
-  unsigned char ps2_out;
-  unsigned char ascii_out;
-  unsigned char seg_count1, seg_count0;
-  unsigned char seg_ascii1, seg_ascii0;
-  unsigned char seg_scan_code1, seg_scan_code0;
+  // bool ready, overflow, sampling;
+  uint8_t ps2_out;
+  uint8_t ascii_out;
 } ref_model;
 
 void assign_dut(TOP_NAME *dut, const DUT_INPUT *ref_in) {
@@ -116,16 +118,37 @@ void eval_ref(const DUT_INPUT *ref_in, DUT_OUTPUT *ref_out) {
 
 void print_data(const TOP_NAME *dut, const DUT_OUTPUT *ref_out,
                 vluint64_t sim_time) {
-  printf("cycle[%lu]\n", sim_time);
+  if (dut->ready && dut->clk == 1) {
+    printf("cycle[%lu]\n", sim_time);
 
-  printf("\t[dut input]  clk=%d clrn=%d kbd_clk=%d kbd_data=%d\n", dut->clk,
-         dut->clrn, dut->kbd_clk, dut->kbd_data);
-  printf("\t[dut output] ps2_out=%02x ascii_out=%02x\n", dut->ps2_out,
-         dut->ascii_out);
+    printf("\t[dut input]  clk=%1d clrn=%1d kbd_clk=%1d kbd_data=%1d\n",
+           dut->clk, dut->clrn, dut->kbd_clk, dut->kbd_data);
+    printf("\t[dut output] ready=%01x nextdata_n=%01x\n", dut->ready,
+           dut->nextdata_n);
+    printf("\t[dut output] ps2_out=%02x ascii_out=%02x\n", dut->ps2_out,
+           dut->ascii_out);
+  }
 }
 
 void assert_ref(const TOP_NAME *dut, const DUT_OUTPUT *ref_out) {
-  // pass
+  static uint8_t count = 0;
+  static uint8_t last_scancode = 0;
+
+  if (dut->ready && dut->clk == 1) {
+    uint8_t scancode = dut->ps2_out;
+
+    if (scancode != last_scancode) {
+      count++;
+    } else {
+      auto it = scancode_to_ascii_map.find(scancode);
+      if (it != scancode_to_ascii_map.end()) {
+        uint8_t value = scancode_to_ascii_map[scancode];
+        assert(dut->ascii_out == value);
+      }
+    }
+
+    last_scancode = scancode;
+  }
 }
 
 int main(int argc, char **argv) {
@@ -157,26 +180,19 @@ int main(int argc, char **argv) {
     nvboard_update();
     reset(dut, 1);
 
-    // while (sim_time < MAX_SIM_TIME) {
-    while (1) {
+    for (;;) {
       // if (sim_time % 1000 == 0) continue;
 
       dut->clk = !dut->clk;
       nvboard_update();
 
       // const auto test_pair = data_arr[sim_time % data_size];
-      // assign_dut(dut, &test_pair);
+      assign_dut(dut, nullptr);
 
-      // eval_ref(&test_pair, &ref_model);
       dut->eval();
+      eval_ref(nullptr, &ref_model);
 
-      if (dut->ready) {
-        print_data(dut, &ref_model, sim_time);
-        if (dut->ps2_out != 0xF0) {
-          // assert(dut->ascii_out == scancode_to_ascii_map[dut->ps2_out]);
-        }
-      }
-
+      print_data(dut, &ref_model, sim_time);
       assert_ref(dut, &ref_model);
 
       sim_time++;
