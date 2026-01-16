@@ -6,6 +6,7 @@ grep -E '([^a]*a){3,}' /usr/share/dict/words | grep -v "'s$" | wc -l
 
 echo
 
+# 词尾两字母组合
 grep 'a.*a.*a.*' /usr/share/dict/words | grep -v "'s$" | sed -E "s/.*([a-z]{2})/\1/" | sort | uniq -c | sort -n | tail -n3 
 
 ALL="all.txt"

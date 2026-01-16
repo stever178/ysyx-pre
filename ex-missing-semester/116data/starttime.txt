@@ -1,0 +1,43 @@
+Jan 13 21:32:51 lsj-VirtualBox systemd[1485]: Startup finished in 307ms.
+Jan 13 21:33:08 lsj-VirtualBox systemd[2332]: Startup finished in 400ms.
+Jan 13 21:34:20 lsj-VirtualBox systemd[1]: Startup finished in 5.169s (kernel) + 1min 31.004s (userspace) = 1min 36.174s.
+
+Jan 07 22:53:04 lsj-VirtualBox systemd[1469]: Startup finished in 336ms.
+Jan 07 22:53:11 lsj-VirtualBox systemd[2301]: Startup finished in 286ms.
+Jan 07 22:54:32 lsj-VirtualBox systemd[1]: Startup finished in 3.197s (kernel) + 1min 30.602s (userspace) = 1min 33.799s.
+
+Dec 09 19:21:30 lsj-VirtualBox systemd[1271]: Startup finished in 351ms.
+Dec 09 19:22:51 lsj-VirtualBox systemd[2120]: Startup finished in 298ms.
+Dec 09 19:22:58 lsj-VirtualBox systemd[1]: Startup finished in 4.386s (kernel) + 1min 30.454s (userspace) = 1min 34.841s.
+
+Nov 30 16:07:59 lsj-VirtualBox systemd[1309]: Startup finished in 411ms.
+Nov 30 16:08:45 lsj-VirtualBox systemd[2124]: Startup finished in 275ms.
+Nov 30 16:09:27 lsj-VirtualBox systemd[1]: Startup finished in 5.795s (kernel) + 1min 30.376s (userspace) = 1min 36.171s.
+
+Nov 26 15:20:28 lsj-VirtualBox systemd[1254]: Startup finished in 306ms.
+Nov 26 15:20:44 lsj-VirtualBox systemd[2069]: Startup finished in 248ms.
+Nov 26 15:21:57 lsj-VirtualBox systemd[1]: Startup finished in 3.275s (kernel) + 1min 30.463s (userspace) = 1min 33.738s.
+Nov 28 15:45:43 lsj-VirtualBox systemd[177047]: Startup finished in 402ms.
+
+Nov 19 23:04:39 lsj-VirtualBox systemd[1252]: Startup finished in 456ms.
+Nov 19 23:06:12 lsj-VirtualBox systemd[1]: Startup finished in 3.569s (kernel) + 1min 33.737s (userspace) = 1min 37.306s.
+Nov 19 23:53:00 lsj-VirtualBox systemd[2170]: Startup finished in 319ms.
+
+Nov 09 15:15:35 lsj-VirtualBox systemd[1242]: Startup finished in 435ms.
+Nov 09 15:16:17 lsj-VirtualBox systemd[2071]: Startup finished in 278ms.
+Nov 09 15:17:03 lsj-VirtualBox systemd[1]: Startup finished in 3.623s (kernel) + 1min 30.635s (userspace) = 1min 34.259s.
+
+Nov 06 16:12:21 lsj-VirtualBox systemd[1246]: Startup finished in 329ms.
+Nov 06 16:13:02 lsj-VirtualBox systemd[2079]: Startup finished in 277ms.
+Nov 06 16:13:48 lsj-VirtualBox systemd[1]: Startup finished in 2.668s (kernel) + 1min 31.201s (userspace) = 1min 33.869s.
+Nov 08 15:05:59 lsj-VirtualBox systemd[108713]: Startup finished in 433ms.
+Nov 09 15:13:45 lsj-VirtualBox systemd[173278]: Startup finished in 383ms.
+
+Nov 03 23:00:23 lsj-VirtualBox systemd[1248]: Startup finished in 473ms.
+Nov 03 23:00:41 lsj-VirtualBox systemd[2073]: Startup finished in 275ms.
+Nov 03 23:01:59 lsj-VirtualBox systemd[1]: Startup finished in 2.972s (kernel) + 1min 30.516s (userspace) = 1min 33.489s.
+
+Nov 03 22:51:53 lsj-VirtualBox systemd[1259]: Startup finished in 349ms.
+Nov 03 22:52:16 lsj-VirtualBox systemd[2074]: Startup finished in 258ms.
+Nov 03 22:53:20 lsj-VirtualBox systemd[1]: Startup finished in 3.280s (kernel) + 1min 31.419s (userspace) = 1min 34.700s.
+

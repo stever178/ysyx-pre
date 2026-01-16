@@ -1,0 +1,26 @@
+// build.mill
+// mill version: 1.1.0-RC3
+
+import mill._
+import scalalib._
+
+object top extends ScalaModule {
+  def scalaVersion = "2.12.12"
+
+  def scalacOptions = Seq(
+    "-language:reflectiveCalls",
+    "-deprecation",
+    "-feature",
+    "-Xcheckinit",
+    "-Xsource:2.11",
+    "-P:chiselplugin:genBundleElements"
+  )
+
+  def deps = Seq(
+    mvn"edu.berkeley.cs::chisel3:3.5.0"
+  )
+
+  def scalacPluginDeps = Seq(
+    mvn"edu.berkeley.cs:::chisel3-plugin:3.5.0"
+  )
+}

@@ -8,6 +8,7 @@ obj_dir
 out
 .bsp
 .scala-build
+project
 
 *.o
 *.out
@@ -29,3 +30,4 @@ compile_commands.json
 !.gitignore
 !README.md
 !log
+
