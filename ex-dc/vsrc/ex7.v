@@ -100,17 +100,56 @@ module get_count(
     parameter [7:0] BREAK_CODE = 8'hF0;
 
     // 计算按键总次数, 按住不放只算一次
-    reg in_break_seq; // 标记是否处于break序列中
+    // method 1
+    // reg in_break_seq; // 标记是否处于break序列中
+    // always @(posedge clk) begin
+    //     if (clrn == 1'b0) begin
+    //         in_break_seq <= 1'b0;
+    //         count_out <= 8'h00;
+    //     end else begin
+    //         if (scan_code == BREAK_CODE) begin
+    //             in_break_seq <= 1'b1; // 开始break序列
+    //         end else if (in_break_seq) begin
+    //             in_break_seq <= 1'b0; // 结束break序列，计数加1
+    //             count_out <= count_out + 8'h01;
+    //         end
+    //     end
+    // end
+
+    // method 2
+    parameter [1:0] BREAK_IS = 2'd0, BREAK_HOLD = 2'd1, BREAK_NOT = 2'd2;
+    reg [1:0] break_state, break_state_next;
+
+    always @(*) begin
+        case (break_state)
+            BREAK_NOT: begin
+                if (scan_code == BREAK_CODE)
+                    break_state_next = BREAK_IS;
+                else
+                    break_state_next = BREAK_NOT;
+            end
+            BREAK_IS: begin
+                break_state_next = BREAK_HOLD;
+            end
+            BREAK_HOLD: begin
+                if (scan_code == BREAK_CODE)
+                    break_state_next = BREAK_HOLD;
+                else
+                    break_state_next = BREAK_NOT;
+            end
+            default: begin
+                break_state_next = BREAK_NOT;
+            end
+        endcase
+    end
 
     always @(posedge clk) begin
         if (clrn == 1'b0) begin
-            in_break_seq <= 1'b0;
+            break_state <= BREAK_NOT;
             count_out <= 8'h00;
         end else begin
-            if (scan_code == BREAK_CODE) begin
-                in_break_seq <= 1'b1; // 开始break序列
-            end else if (in_break_seq) begin
-                in_break_seq <= 1'b0; // 结束break序列，计数加1
+            break_state <= break_state_next;
+            if (break_state == BREAK_IS) begin
                 count_out <= count_out + 8'h01;
             end
         end
@@ -360,24 +399,8 @@ module update_nextdata_n(
     input ready,
     output reg nextdata_n
 );
-    // 读取完毕后将nextdata_n置零 一个周期
-    // reg nextdata_n;
-    // always @(posedge clk) begin
-    //     if (clrn == 0)
-    //         nextdata_n <= 1'b1;
-    //     else begin
-    //         // if (nextdata_n == 1'b0)
-    //         //     nextdata_n <= 1'b1;
-    //         // else begin
-    //             if (ready)
-    //                 nextdata_n <= 1'b0;
-    //             else
-    //                 nextdata_n <= 1'b1;
-    //         // end
-    //     end
-    // end
-
-    // 时钟 N+1 上升沿之后，寄存器稳定值为：
+    // N 时刻 ready = 1
+    // N+1 时刻上升沿之后，寄存器稳定值为：
     // state = REQ
     // nextdata_n = 1
 
