@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # analyze_cache.sh - 分析所有 cachegrind 结果文件
 # 用法: ./tests/analyze_cache.sh
 

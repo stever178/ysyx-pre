@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 for i in {0..9}; do
    journalctl -b-$i | grep "Startup finished in"

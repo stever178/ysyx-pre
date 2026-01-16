@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 grep 'a.*a.*a.*' /usr/share/dict/words | grep -v "'s$" | wc -l
 grep -E '(a.*){3}' /usr/share/dict/words | grep -v "'s$" | wc -l

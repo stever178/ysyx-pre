@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 OUT=starttime.txt
 if [ ! -f $OUT ]; then

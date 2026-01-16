@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 find . -type f -mmin -60 | xargs -d '\n' ls -lt | head -3
 

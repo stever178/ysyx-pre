@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # analyze_call.sh - 分析所有 callgrind 结果文件
 # 用法: ./tests/analyze_call.sh
 
