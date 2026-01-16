@@ -118,7 +118,7 @@ void eval_ref(const DUT_INPUT *ref_in, DUT_OUTPUT *ref_out) {
 
 void print_data(const TOP_NAME *dut, const DUT_OUTPUT *ref_out,
                 vluint64_t sim_time) {
-  if (dut->ready && dut->clk == 1) {
+  if (dut->ready) {
     printf("cycle[%lu]\n", sim_time);
 
     printf("\t[dut input]  clk=%1d clrn=%1d kbd_clk=%1d kbd_data=%1d\n",
@@ -194,6 +194,12 @@ int main(int argc, char **argv) {
 
       print_data(dut, &ref_model, sim_time);
       assert_ref(dut, &ref_model);
+
+      // wrong
+      // if (dut->ready) {
+      //   m_trace->dump(sim_time);
+      // }
+      m_trace->dump(sim_time);
 
       sim_time++;
     }

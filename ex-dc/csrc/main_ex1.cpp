@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
     print_data(dut, &ref_model, sim_time);
     assert_ref(dut, &ref_model);
 
-    // m_trace->dump(sim_time);
+    m_trace->dump(sim_time);
     sim_time++;
   }
   m_trace->close();

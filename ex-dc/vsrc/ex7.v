@@ -377,6 +377,10 @@ module update_nextdata_n(
     //     end
     // end
 
+    // 时钟 N+1 上升沿之后，寄存器稳定值为：
+    // state = REQ
+    // nextdata_n = 1
+
     localparam IDLE = 1'b0, REQ = 1'b1;
     reg state, next_state;
 
@@ -431,8 +435,8 @@ module ps2_keyboard(
     // internal signal, for test
     reg [9:0] buffer;        // ps2_data bits
     reg [7:0] fifo[7:0];     // data fifo
-    reg [2:0] w_ptr, r_ptr;   // fifo write and read pointers
-    reg [3:0] count;  // count ps2_data bits
+    reg [2:0] w_ptr, r_ptr;  // fifo write and read pointers
+    reg [3:0] count;         // count ps2_data bits
 
     // detect falling edge of ps2_clk
     reg [2:0] ps2_clk_sync;

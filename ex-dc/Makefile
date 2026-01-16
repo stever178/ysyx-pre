@@ -71,8 +71,17 @@ $(STA_TARGETS): sta-ex%: $(SDC_ABS_DIR)/ex%.sdc $(VSRC_ABS_DIR)/ex%.v
 		CLK_FREQ_MHZ=100 CLK_PORT_NAME=clk O=$(BUILD_ABS_DIR)/result_sta_ex$* \
 		RTL_FILES="$(VSRC_ABS_DIR)/ex$*.v"
 
-waves: waveform.vcd
-	@gtkwave waveform.vcd
+waves: ./waveform.vcd
+	@if [ ! -f "$<" ]; then \
+		echo "Error: file $< does not exist."; \
+		exit 1; \
+	elif [ ! -s "$<" ]; then \
+		echo "Error: file $< is empty. Please check your simulation result."; \
+		exit 1; \
+	else \
+		echo "Opening waveform viewer: $< ..."; \
+		gtkwave $<; \
+	fi
 
 clean:
 	@rm -rf $(BUILD_DIR) logs waveform.vcd compile_commands.json
