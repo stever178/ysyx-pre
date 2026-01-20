@@ -8,7 +8,7 @@ obj_dir
 out
 .bsp
 .scala-build
-project
+target
 
 *.o
 *.out

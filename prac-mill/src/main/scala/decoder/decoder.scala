@@ -11,12 +11,15 @@ class Decoder extends RawModule {
     val out = Output(UInt(8.W))
   })
 
-  io.out := MuxLookup(io.in, "b00000000".U, Array(0.U -> "b00000001".U,
+  io.out := MuxLookup(io.in, "b00000000".U)(Seq(
+    0.U -> "b00000001".U,
     1.U -> "b00000010".U,
     2.U -> "b00000100".U,
     3.U -> "b00001000".U,
     4.U -> "b00010000".U,
     5.U -> "b00100000".U,
     6.U -> "b01000000".U,
-    7.U -> "b10000000".U))
+    7.U -> "b10000000".U
+  ))
 }
+
