@@ -464,6 +464,7 @@ module ps2_keyboard(
     // detect falling edge of ps2_clk
     reg [2:0] ps2_clk_sync;
 
+    // 三拍同步器，能更好地处理亚稳态问题
     always @(posedge clk) begin
         ps2_clk_sync <= {ps2_clk_sync[1:0], ps2_clk};
     end

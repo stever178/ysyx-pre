@@ -1,0 +1,41 @@
+// build.mill
+// mill version: 0.12.15
+
+import $ivy.`org.chipsalliance::chisel:7.3.0`
+import $ivy.`org.chipsalliance::firtool-resolver:2.0.1`
+import mill._
+import scalalib._
+
+val defaultScalaVersion = "2.13.17"
+
+val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
+
+object decoderTop extends ScalaModule {
+  def scalaVersion: T[String] = defaultScalaVersion
+
+  def millSourcePath = pwd
+
+  def scalacOptions = Seq(
+    "-language:reflectiveCalls",
+    "-deprecation",
+    "-feature",
+    "-Xcheckinit",
+    "-Xsource:2.13",
+    "-Ymacro-annotations", // 7.x 仍需要这个选项
+    "-Ytasty-reader" 	   // 香山添加的，适配 7.x 的语法特性
+  )
+
+  def ivyDeps = T {
+    Agg(
+      ivy"org.chipsalliance::chisel:7.3.0",
+      ivy"org.chipsalliance::firtool-resolver:2.0.1" // 香山依赖的 firtool 解析器
+    )
+  }
+
+  def scalacPluginIvyDeps = T {
+    Agg(
+	  ivy"org.chipsalliance:::chisel-plugin:7.3.0"
+    )
+  }
+}
+
