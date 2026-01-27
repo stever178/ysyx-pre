@@ -1,13 +1,14 @@
 .cache
 .vscode
 .metals
+.bloop
+.bsp
+.scala-build
 
 build
 target
 obj_dir
 out
-.bsp
-.scala-build
 target
 
 *.o
