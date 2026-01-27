@@ -5,6 +5,9 @@ NXDC_ABS_DIR = $(abspath ./constr)
 CSRC_ABS_DIR = $(abspath ./csrc)
 VSRC_ABS_DIR = $(abspath ./vsrc)
 SDC_ABS_DIR = $(abspath ./scripts)
+CHISEL_FILES_ABS_DIR = $(abspath ./src)
+CHISEL_SRCS = $(wildcard $(CHISEL_FILES_ABS_DIR)/main/scala/Ex*.scala)
+CHISEL_TESTS = $(wildcard $(CHISEL_FILES_ABS_DIR)/test/scala/Ex*Tester.scala) 
 
 EX_V_FILES := $(wildcard ./vsrc/ex*.v)
 EX_SUFFIX := $(sort $(patsubst ./vsrc/ex%.v, %, $(EX_V_FILES)))
@@ -83,13 +86,45 @@ waves: ./waveform.vcd
 		gtkwave $<; \
 	fi
 
+default: $(EX_TARGETS)
+
+TOP = top
+
+TEST_TARGETS = $(addprefix test-ex, $(EX_SUFFIX))
+$(TEST_TARGETS): test-ex%: $(CHISEL_FILES_ABS_DIR)/main/scala/Ex%.scala \
+						   $(CHISEL_FILES_ABS_DIR)/test/scala/Ex%Tester.scala
+	mill -i $(TOP).test -z "Ex$* Module"
+
+VERILOG_TARGETS = $(addprefix verilog-ex, $(EX_SUFFIX))
+$(VERILOG_TARGETS): verilog-ex%: $(CHISEL_FILES_ABS_DIR)/main/scala/Ex%.scala
+	$(info "Generating verilog for ex$* ...")
+	mkdir -p $(BUILD_DIR)
+	mill -i $(TOP).runMain ex$*.Ex$*Elaborate --target-dir $(BUILD_DIR)
+
+HELP_TARGETS = $(addprefix help-ex, $(EX_SUFFIX))
+$(HELP_TARGETS): help-ex%: $(CHISEL_FILES_ABS_DIR)/main/scala/Ex%.scala
+	$(info "Generating help for ex$* ...")
+	mill -i $(TOP).runMain ex$*.Ex$*Elaborate --help
+
+reformat:
+	mill -i __.reformat
+
+checkformat:
+	mill -i __.checkFormat
+
+bsp:
+	mill -i mill.bsp.BSP/install
+
+idea:
+	mill -i mill.idea.GenIdea/idea
+
 clean:
-	@rm -rf $(BUILD_DIR) logs waveform.vcd compile_commands.json
+	rm -rf $(BUILD_DIR) logs waveform.vcd compile_commands.json
+	-rm -rf $(BUILD_DIR)
 
 list:
 	@echo "\nFound exercises: $(EX_SUFFIX)"
 
-default: $(EX_TARGETS)
-
+.PHONY: test verilog help reformat checkformat
 .PHONY: default all clean waves list \
 	$(EX_TARGETS) $(RUN_TARGETS) $(SHOW_TARGETS) $(GDB_TARGETS) $(STA_TARGETS)

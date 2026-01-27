@@ -1,41 +1,38 @@
-// build.mill
-// mill version: 0.12.15
-
-import $ivy.`org.chipsalliance::chisel:7.3.0`
-import $ivy.`org.chipsalliance::firtool-resolver:2.0.1`
+// import Mill dependency
 import mill._
+import mill.define.Sources
+import mill.modules.Util
+import mill.scalalib.TestModule.ScalaTest
 import scalalib._
+// support BSP
+import mill.bsp._
 
-val defaultScalaVersion = "2.13.17"
+// Note: This project requires .mill-jvm-opts file containing:
+//   -Dchisel.project.root=${PWD}
+// This is needed because Chisel needs to know the project root directory
+// to properly generate and handle test directories and output files.
+// See: https://github.com/com-lihaoyi/mill/issues/3840
 
-val pwd = os.Path(sys.env("MILL_WORKSPACE_ROOT"))
-
-object decoderTop extends ScalaModule {
-  def scalaVersion: T[String] = defaultScalaVersion
-
-  def millSourcePath = pwd
-
-  def scalacOptions = Seq(
+object top extends SbtModule { m =>
+  override def millSourcePath = super.millSourcePath / os.up
+  override def scalaVersion = "2.13.16"
+  def chiselVersion = "7.0.0"
+  override def scalacOptions = Seq(
     "-language:reflectiveCalls",
     "-deprecation",
     "-feature",
     "-Xcheckinit",
-    "-Xsource:2.13",
-    "-Ymacro-annotations", // 7.x 仍需要这个选项
-    "-Ytasty-reader" 	   // 香山添加的，适配 7.x 的语法特性
+    "-Ymacro-annotations",
   )
-
-  def ivyDeps = T {
-    Agg(
-      ivy"org.chipsalliance::chisel:7.3.0",
-      ivy"org.chipsalliance::firtool-resolver:2.0.1" // 香山依赖的 firtool 解析器
-    )
-  }
-
-  def scalacPluginIvyDeps = T {
-    Agg(
-	  ivy"org.chipsalliance:::chisel-plugin:7.3.0"
+  override def ivyDeps = Agg(
+    ivy"org.chipsalliance::chisel:$chiselVersion",
+  )
+  override def scalacPluginIvyDeps = Agg(
+    ivy"org.chipsalliance:::chisel-plugin:$chiselVersion",
+  )
+  object test extends SbtTests with TestModule.ScalaTest {
+    override def ivyDeps = m.ivyDeps() ++ Agg(
+      ivy"org.scalatest::scalatest::3.2.19"
     )
   }
 }
-
